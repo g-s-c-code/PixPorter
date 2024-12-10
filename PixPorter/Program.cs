@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -19,6 +15,7 @@ class PixPorter
 		{ ".jpeg", ".webp" },
 		{ ".webp", ".png" }
 	};
+
 
 	static void Main(string[] args)
 	{
