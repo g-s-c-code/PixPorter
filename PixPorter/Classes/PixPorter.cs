@@ -1,4 +1,6 @@
-﻿public class PixPorter
+﻿using Spectre.Console;
+
+public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
 
@@ -17,8 +19,7 @@
 
 		while (true)
 		{
-			Console.Write($"{_commandProcessor.CurrentDirectory}> ");
-			string input = (Console.ReadLine() ?? "").Trim();
+			string input = AnsiConsole.Ask<string>($"{_commandProcessor.CurrentDirectory}> ");
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
 

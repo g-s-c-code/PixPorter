@@ -1,4 +1,6 @@
-﻿public class CommandProcessor
+﻿using Spectre.Console;
+
+public class CommandProcessor
 {
 	private readonly PixPorterConfig _config;
 	private readonly ImageConverter _converter;
@@ -90,8 +92,7 @@
 			Console.WriteLine("4. View Current Configuration");
 			Console.WriteLine("0. Exit Configuration");
 
-			Console.Write("Choose an option: ");
-			string choice = (Console.ReadLine() ?? "").Trim();
+			string choice = AnsiConsole.Ask<string>("Choose an option: ");
 
 			switch (choice)
 			{
@@ -110,7 +111,7 @@
 				case "0":
 					return;
 				default:
-					Console.WriteLine("Invalid option. Please try again.");
+					AnsiConsole.WriteLine("Invalid option. Please try again.");
 					break;
 			}
 		}
