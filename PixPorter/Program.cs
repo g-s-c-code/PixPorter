@@ -5,11 +5,9 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 class PixPorter
 {
-	public static string currentDirectory = Environment.OSVersion.Platform == PlatformID.Win32NT ? @"C:\" : "/";
+	public static string currentDirectory = AppContext.BaseDirectory;
 	public static string? outputDirectory = null; // null is same as input folder
-
-	// Configuration for default conversions
-	private static Dictionary<string, string> _defaultConversions = new Dictionary<string, string>
+	public static readonly Dictionary<string, string> defaultConversions = new()
 	{
 		{ ".png", ".webp" },
 		{ ".jpg", ".webp" },
@@ -17,20 +15,16 @@ class PixPorter
 		{ ".webp", ".png" }
 	};
 
-
 	static void Main(string[] args)
 	{
-		currentDirectory = Directory.GetCurrentDirectory();
 		Console.Title = "PixPorter - Image Format Converter";
-
 		Console.WriteLine("PixPorter - Image Format Converter");
 		Console.WriteLine("Type 'help' for available commands");
 
 		while (true)
 		{
 			Console.Write($"{currentDirectory}> ");
-			string input = Console.ReadLine().Trim();
-
+			string input = (Console.ReadLine() ?? "").Trim();
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
 
@@ -65,7 +59,7 @@ class PixPorter
 					break;
 				default:
 					// Check for explicit format flag
-					string targetFormat = parts.FirstOrDefault(p => p.StartsWith("."));
+					string? targetFormat = parts.FirstOrDefault(p => p.StartsWith("."));
 
 					if (parts.Length > 1 && targetFormat != null)
 					{
@@ -133,15 +127,15 @@ class PixPorter
 		}
 	}
 
-	static void ConvertFile(string filePath, string explicitFormat = null)
+	static void ConvertFile(string filePath, string? explicitFormat = null)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();
-		string outputFormat = explicitFormat;
+		string? outputFormat = explicitFormat;
 
 		// If no explicit format, use default conversion
 		if (string.IsNullOrEmpty(outputFormat))
 		{
-			if (!_defaultConversions.TryGetValue(extension, out outputFormat))
+			if (!defaultConversions.TryGetValue(extension, out outputFormat))
 			{
 				Console.WriteLine($"Unsupported file type: {filePath}");
 				return;
@@ -215,7 +209,7 @@ class PixPorter
 			Console.WriteLine("0. Exit Configuration");
 
 			Console.Write("Choose an option: ");
-			string choice = Console.ReadLine().Trim();
+			string choice = (Console.ReadLine() ?? "").Trim();
 
 			switch (choice)
 			{
@@ -244,7 +238,7 @@ class PixPorter
 	static void ConfigureConversionRules()
 	{
 		Console.WriteLine("Current Default Conversions:");
-		foreach (var conversion in _defaultConversions)
+		foreach (var conversion in defaultConversions)
 		{
 			Console.WriteLine($"{conversion.Key} -> {conversion.Value}");
 		}
@@ -252,7 +246,7 @@ class PixPorter
 		Console.WriteLine("\nEnter new conversion (e.g., '.png .jpg' to change PNG conversion)");
 		Console.WriteLine("Or press Enter to keep current settings");
 
-		string input = Console.ReadLine().Trim();
+		string input = (Console.ReadLine() ?? "").Trim();
 		if (string.IsNullOrEmpty(input)) return;
 
 		var parts = input.Split(' ');
@@ -261,7 +255,7 @@ class PixPorter
 			string sourceFormat = parts[0].StartsWith('.') ? parts[0] : $".{parts[0]}";
 			string targetFormat = parts[1].StartsWith('.') ? parts[1] : $".{parts[1]}";
 
-			_defaultConversions[sourceFormat] = targetFormat;
+			defaultConversions[sourceFormat] = targetFormat;
 			Console.WriteLine($"Updated: {sourceFormat} -> {targetFormat}");
 		}
 		else
@@ -273,7 +267,7 @@ class PixPorter
 	static void SetOutputDirectory()
 	{
 		Console.WriteLine("Enter full path for permanent output directory:");
-		string path = Console.ReadLine().Trim();
+		string path = (Console.ReadLine() ?? "").Trim();
 
 		if (string.IsNullOrEmpty(path))
 		{
@@ -289,7 +283,7 @@ class PixPorter
 		else
 		{
 			Console.WriteLine("Directory does not exist. Create it? (Y/N)");
-			if (Console.ReadLine().Trim().ToUpper() == "Y")
+			if ((Console.ReadLine() ?? "").Trim().ToUpper() == "Y")
 			{
 				try
 				{
@@ -310,7 +304,7 @@ class PixPorter
 		Console.WriteLine("\nCurrent Configuration:");
 
 		Console.WriteLine("Default Conversions:");
-		foreach (var conversion in _defaultConversions)
+		foreach (var conversion in defaultConversions)
 		{
 			Console.WriteLine($"{conversion.Key} -> {conversion.Value}");
 		}
