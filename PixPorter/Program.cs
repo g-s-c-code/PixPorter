@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 class PixPorter
 {
 	private static string _currentDirectory;
+	private static string _outputDirectory = null;  // null means same as input folder
 
 	// Configuration for default conversions
 	private static Dictionary<string, string> _defaultConversions = new Dictionary<string, string>
@@ -152,10 +153,22 @@ class PixPorter
 			? outputFormat.ToLower()
 			: $".{outputFormat.ToLower()}";
 
+		// Determine output path
+		string outputPath;
+		if (_outputDirectory != null)
+		{
+			// Use permanent output directory
+			string fileName = Path.GetFileNameWithoutExtension(filePath) + outputFormat;
+			outputPath = Path.Combine(_outputDirectory, fileName);
+		}
+		else
+		{
+			// Use same directory as input file
+			outputPath = Path.ChangeExtension(filePath, outputFormat);
+		}
+
 		using (var image = Image.Load(filePath))
 		{
-			string outputPath = Path.ChangeExtension(filePath, outputFormat);
-
 			switch (outputFormat)
 			{
 				case ".webp":
@@ -192,6 +205,44 @@ class PixPorter
 
 	static void ConfigureConversions()
 	{
+		while (true)
+		{
+			Console.WriteLine("\nConfiguration Menu:");
+			Console.WriteLine("1. Modify Default Conversions");
+			Console.WriteLine("2. Set Permanent Output Directory");
+			Console.WriteLine("3. Clear Output Directory");
+			Console.WriteLine("4. View Current Configuration");
+			Console.WriteLine("0. Exit Configuration");
+
+			Console.Write("Choose an option: ");
+			string choice = Console.ReadLine().Trim();
+
+			switch (choice)
+			{
+				case "1":
+					ConfigureConversionRules();
+					break;
+				case "2":
+					SetOutputDirectory();
+					break;
+				case "3":
+					_outputDirectory = null;
+					Console.WriteLine("Output directory reset to default (same as input folder).");
+					break;
+				case "4":
+					DisplayCurrentConfiguration();
+					break;
+				case "0":
+					return;
+				default:
+					Console.WriteLine("Invalid option. Please try again.");
+					break;
+			}
+		}
+	}
+
+	static void ConfigureConversionRules()
+	{
 		Console.WriteLine("Current Default Conversions:");
 		foreach (var conversion in _defaultConversions)
 		{
@@ -219,12 +270,64 @@ class PixPorter
 		}
 	}
 
+	static void SetOutputDirectory()
+	{
+		Console.WriteLine("Enter full path for permanent output directory:");
+		string path = Console.ReadLine().Trim();
+
+		if (string.IsNullOrEmpty(path))
+		{
+			Console.WriteLine("Operation cancelled.");
+			return;
+		}
+
+		if (Directory.Exists(path))
+		{
+			_outputDirectory = path;
+			Console.WriteLine($"Output directory set to: {path}");
+		}
+		else
+		{
+			Console.WriteLine("Directory does not exist. Create it? (Y/N)");
+			if (Console.ReadLine().Trim().ToUpper() == "Y")
+			{
+				try
+				{
+					Directory.CreateDirectory(path);
+					_outputDirectory = path;
+					Console.WriteLine($"Created and set output directory to: {path}");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Could not create directory: {ex.Message}");
+				}
+			}
+		}
+	}
+
+	static void DisplayCurrentConfiguration()
+	{
+		Console.WriteLine("\nCurrent Configuration:");
+
+		Console.WriteLine("Default Conversions:");
+		foreach (var conversion in _defaultConversions)
+		{
+			Console.WriteLine($"{conversion.Key} -> {conversion.Value}");
+		}
+
+		Console.WriteLine("\nOutput Directory:");
+		if (_outputDirectory == null)
+			Console.WriteLine("Same as input folder (default)");
+		else
+			Console.WriteLine(_outputDirectory);
+	}
+
 	static void DisplayHelp()
 	{
 		Console.WriteLine("PixPorter Commands:");
 		Console.WriteLine("  cd [path]       - Change current directory");
 		Console.WriteLine("  convert [path]  - Convert image or directory");
-		Console.WriteLine("  config          - Configure default conversions");
+		Console.WriteLine("  config          - Configure conversions and output directory");
 		Console.WriteLine("  help            - Show this help menu");
 		Console.WriteLine("  exit            - Close PixPorter");
 		Console.WriteLine("\nSupported Conversions:");
