@@ -42,7 +42,7 @@ class PixPorter
 			switch (command)
 			{
 				case "cd":
-					ChangeDirectory(parts.Length > 1 ? parts[1] : null);
+					ChangeDirectory(parts.Length > 1 ? parts[1] : "");
 					break;
 				case "convert":
 					if (parts.Length > 1)
@@ -103,7 +103,7 @@ class PixPorter
 		}
 	}
 
-	static void ConvertPath(string path, string explicitFormat = null)
+	static void ConvertPath(string path, string? explicitFormat = null)
 	{
 		// Remove quotes if present
 		path = path.Trim('"');
@@ -184,7 +184,7 @@ class PixPorter
 		}
 	}
 
-	static void ConvertDirectory(string directoryPath, string explicitFormat = null)
+	static void ConvertDirectory(string directoryPath, string? explicitFormat = null)
 	{
 		string[] supportedExtensions = { ".webp", ".png", ".jpg", ".jpeg" };
 
