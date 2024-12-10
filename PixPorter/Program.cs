@@ -5,8 +5,8 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 class PixPorter
 {
-	private static string _currentDirectory;
-	private static string _outputDirectory = null;  // null means same as input folder
+	public static string currentDirectory = Environment.OSVersion.Platform == PlatformID.Win32NT ? @"C:\" : "/";
+	public static string? outputDirectory = null; // null is same as input folder
 
 	// Configuration for default conversions
 	private static Dictionary<string, string> _defaultConversions = new Dictionary<string, string>
@@ -20,7 +20,7 @@ class PixPorter
 
 	static void Main(string[] args)
 	{
-		_currentDirectory = Directory.GetCurrentDirectory();
+		currentDirectory = Directory.GetCurrentDirectory();
 		Console.Title = "PixPorter - Image Format Converter";
 
 		Console.WriteLine("PixPorter - Image Format Converter");
@@ -28,7 +28,7 @@ class PixPorter
 
 		while (true)
 		{
-			Console.Write($"{_currentDirectory}> ");
+			Console.Write($"{currentDirectory}> ");
 			string input = Console.ReadLine().Trim();
 
 			if (string.IsNullOrWhiteSpace(input))
@@ -91,17 +91,17 @@ class PixPorter
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			_currentDirectory = Directory.GetCurrentDirectory();
+			currentDirectory = Directory.GetCurrentDirectory();
 			return;
 		}
 
 		string newPath = Path.IsPathRooted(path)
 			? path
-			: Path.GetFullPath(Path.Combine(_currentDirectory, path));
+			: Path.GetFullPath(Path.Combine(currentDirectory, path));
 
 		if (Directory.Exists(newPath))
 		{
-			_currentDirectory = newPath;
+			currentDirectory = newPath;
 		}
 		else
 		{
@@ -117,7 +117,7 @@ class PixPorter
 		// Resolve full path
 		path = Path.IsPathRooted(path)
 			? path
-			: Path.GetFullPath(Path.Combine(_currentDirectory, path));
+			: Path.GetFullPath(Path.Combine(currentDirectory, path));
 
 		if (File.Exists(path))
 		{
@@ -155,11 +155,11 @@ class PixPorter
 
 		// Determine output path
 		string outputPath;
-		if (_outputDirectory != null)
+		if (outputDirectory != null)
 		{
 			// Use permanent output directory
 			string fileName = Path.GetFileNameWithoutExtension(filePath) + outputFormat;
-			outputPath = Path.Combine(_outputDirectory, fileName);
+			outputPath = Path.Combine(outputDirectory, fileName);
 		}
 		else
 		{
@@ -226,7 +226,7 @@ class PixPorter
 					SetOutputDirectory();
 					break;
 				case "3":
-					_outputDirectory = null;
+					outputDirectory = null;
 					Console.WriteLine("Output directory reset to default (same as input folder).");
 					break;
 				case "4":
@@ -283,7 +283,7 @@ class PixPorter
 
 		if (Directory.Exists(path))
 		{
-			_outputDirectory = path;
+			outputDirectory = path;
 			Console.WriteLine($"Output directory set to: {path}");
 		}
 		else
@@ -294,7 +294,7 @@ class PixPorter
 				try
 				{
 					Directory.CreateDirectory(path);
-					_outputDirectory = path;
+					outputDirectory = path;
 					Console.WriteLine($"Created and set output directory to: {path}");
 				}
 				catch (Exception ex)
@@ -316,10 +316,10 @@ class PixPorter
 		}
 
 		Console.WriteLine("\nOutput Directory:");
-		if (_outputDirectory == null)
+		if (outputDirectory == null)
 			Console.WriteLine("Same as input folder (default)");
 		else
-			Console.WriteLine(_outputDirectory);
+			Console.WriteLine(outputDirectory);
 	}
 
 	static void DisplayHelp()
