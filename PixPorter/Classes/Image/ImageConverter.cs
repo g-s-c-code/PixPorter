@@ -20,7 +20,7 @@ public class ImageConverter
 
 		if (outputFormat == null)
 		{
-			AnsiConsole.WriteLine($"Unsupported file type: {filePath}");
+			AnsiConsole.MarkupLine($"[red]Unsupported file type: {filePath}[/]");
 			return;
 		}
 
@@ -29,27 +29,58 @@ public class ImageConverter
 			? Path.Combine(_config.OutputDirectory, Path.GetFileNameWithoutExtension(filePath) + outputFormat)
 			: Path.ChangeExtension(filePath, outputFormat);
 
-		using (var image = Image.Load(filePath))
-		{
-			switch (outputFormat)
+		AnsiConsole.Progress()
+			.AutoRefresh(true)
+			.AutoClear(false)
+			.Columns(new ProgressColumn[]
 			{
-				case ".webp":
-					image.Save(outputPath, new WebpEncoder());
-					break;
-				case ".png":
-					image.Save(outputPath, new PngEncoder());
-					break;
-				case ".jpg":
-				case ".jpeg":
-					image.Save(outputPath, new JpegEncoder());
-					break;
-				default:
-					AnsiConsole.WriteLine($"Unsupported output format: {outputFormat}");
-					return;
-			}
+			new TaskDescriptionColumn(),
+			new ProgressBarColumn(),
+			new PercentageColumn(),
+			new SpinnerColumn()
+			})
+			.Start(ctx =>
+			{
+				var task = ctx.AddTask($"[green]Processing {Path.GetFileName(filePath)}[/]");
 
-			AnsiConsole.WriteLine($"Converted: {filePath} -> {outputPath}");
-		}
+				try
+				{
+					task.Increment(20);
+					System.Threading.Thread.Sleep(200);
+
+					using (var image = Image.Load(filePath))
+					{
+						task.Increment(30);
+						System.Threading.Thread.Sleep(200);
+
+						task.Increment(30);
+
+						switch (outputFormat)
+						{
+							case ".webp":
+								image.Save(outputPath, new WebpEncoder());
+								break;
+							case ".png":
+								image.Save(outputPath, new PngEncoder());
+								break;
+							case ".jpg":
+							case ".jpeg":
+								image.Save(outputPath, new JpegEncoder());
+								break;
+							default:
+								throw new NotSupportedException($"Output format {outputFormat} is not supported.");
+						}
+
+						task.Increment(20);
+					}
+
+					AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
+				}
+				catch (Exception ex)
+				{
+					AnsiConsole.MarkupLine($"[red]Error processing file {filePath}: {ex.Message}[/]");
+				}
+			});
 	}
 
 	public void ConvertDirectory(string directoryPath, string? explicitFormat = null)
@@ -57,11 +88,49 @@ public class ImageConverter
 		string[] supportedExtensions = { ".webp", ".png", ".jpg", ".jpeg" };
 
 		var files = Directory.GetFiles(directoryPath)
-			.Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLower()));
+			.Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLower()))
+			.ToList();
 
-		foreach (var file in files)
+		if (!files.Any())
 		{
-			ConvertFile(file, explicitFormat);
+			AnsiConsole.MarkupLine("[red]No supported image files found in the directory.[/]");
+			return;
 		}
+
+		AnsiConsole.Progress()
+			.AutoRefresh(true)
+			.AutoClear(false)
+			.HideCompleted(true)
+			.Columns(new ProgressColumn[]
+			{
+			new TaskDescriptionColumn(),
+			new ProgressBarColumn(),
+			new PercentageColumn(),
+			new RemainingTimeColumn(),
+			new SpinnerColumn()
+			})
+			.Start(ctx =>
+			{
+				var overallTask = ctx.AddTask("[green]Converting images...[/]", maxValue: files.Count);
+
+				foreach (var file in files)
+				{
+					System.Threading.Thread.Sleep(200);
+
+					try
+					{
+						ConvertFile(file, explicitFormat);
+					}
+					catch (Exception ex)
+					{
+						AnsiConsole.MarkupLine($"[red]Error converting file {file}: {ex.Message}[/]");
+					}
+
+					overallTask.Increment(1);
+				}
+			});
+
+		AnsiConsole.MarkupLine("[green]All files have been successfully processed![/]");
 	}
+
 }

@@ -8,45 +8,45 @@ public class SpectreUI
 
 	public void RenderUI()
 	{
-		var leftTableColumn = new Table();
-		leftTableColumn.AddColumn(new TableColumn("[bold]PixPorter - Image Format Converter and Compressor[/]"));
-		leftTableColumn.AddRow("");
-		leftTableColumn.AddRow("[steelblue1_1 bold]INSTRUCTIONS[/]");
-		leftTableColumn.AddRow("[white underline]Drag & Drop[/]");
-		leftTableColumn.AddRow("[grey85]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]");
-		leftTableColumn.AddRow("");
-		leftTableColumn.AddRow("[white underline]Folder Conversion[/]");
-		leftTableColumn.AddRow("[grey85]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]");
-		leftTableColumn.AddRow("");
-		leftTableColumn.AddRow("");
-		leftTableColumn.AddRow("[steelblue1_1 bold]COMMANDS[/]");
-		leftTableColumn.AddRow("[grey85]cd (path)       - Change current directory[/]");
-		leftTableColumn.AddRow("[grey85]convert (path)  - Convert image or directory[/]");
-		leftTableColumn.AddRow("[grey85]config          - Configure settings[/]");
-		leftTableColumn.AddRow("[grey85]exit            - Close PixPorter[/]");
-		leftTableColumn.Border = TableBorder.None;
-
-		var rightTableColumn = new Table();
-		rightTableColumn.AddColumn(new TableColumn(""));
-		rightTableColumn.AddRow("");
-		rightTableColumn.AddRow("[steelblue1_1 bold]CURRENT SETTINGS[/]");
-		rightTableColumn.AddRow($"[white]Current Directory:[/] [steelblue]{_config.CurrentDirectory}[/]");
-		rightTableColumn.AddRow($"[white]Output Directory:[/] [steelblue]{(_config.OutputDirectory ?? "Same as image input folder (default)")}[/]");
-		rightTableColumn.AddRow("");
-		rightTableColumn.AddRow("[white]Conversion Formats:[/]");
-		foreach (var conversion in _config.DefaultConversions)
+		var table = new Table
 		{
-			rightTableColumn.AddRow($"[steelblue]  {conversion.Key} -> {conversion.Value}[/]");
-		}
-		rightTableColumn.Border = TableBorder.None;
+			Border = TableBorder.Square,
+			UseSafeBorder = true,
+			ShowRowSeparators = true,
+			Title = new TableTitle("PixPorter - Image Format Converter").SetStyle("white bold")
+		};
 
-		var mainLayout = new Table();
-		mainLayout.AddColumn(new TableColumn(leftTableColumn));
-		mainLayout.AddColumn(new TableColumn(rightTableColumn));
-		mainLayout.Border = TableBorder.Minimal;
-		mainLayout.BorderColor(Color.White);
+		table.AddColumn(new TableColumn("[white bold]COMMANDS[/]").Width(50));
+		table.AddColumn(new TableColumn("[white bold]CURRENT SETTINGS[/]").Width(50));
+		table.AddColumn(new TableColumn("[white bold]INSTRUCTIONS[/]").Width(50));
+
+		// Commands section
+		string commands =
+@"[grey85]cd (path)       - [rosybrown]Change directory[/]
+convert (path)  - [rosybrown]Convert image(s)[/]
+config          - [rosybrown]Configure settings[/]
+exit            - [rosybrown]Close PixPorter[/][/]";
+
+		// Current settings section
+		string outputDirectory = _config.OutputDirectory ?? "Same as input folder\n";
+		string conversions = string.Join("\n", _config.DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
+		string currentSettings =
+$@"[grey85 underline]Output Directory[/]
+[rosybrown]{outputDirectory}[/]
+[grey85 underline]Conversion Formats[/]
+{conversions}";
+
+		// Instructions section
+		string instructions =
+@"[grey85 underline]Drag & Drop[/]
+[rosybrown]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
+
+[grey85 underline]Folder Conversion[/]
+[rosybrown]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
+
+		table.AddRow(commands, currentSettings, instructions);
 
 		AnsiConsole.Clear();
-		AnsiConsole.Write(mainLayout);
+		AnsiConsole.Write(table);
 	}
 }
