@@ -1,4 +1,6 @@
-﻿public class CommandProcessor
+﻿using Spectre.Console;
+
+public class CommandProcessor
 {
 	private readonly CommandParser _commandParser;
 	private readonly CommandExecutor _commandExecutor;
@@ -18,11 +20,11 @@
 		}
 		catch (CommandException ex)
 		{
-			Console.WriteLine($"Command Error: {ex.Message}");
+			AnsiConsole.WriteLine($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Unexpected Error: {ex.Message}");
+			AnsiConsole.WriteLine($"Unexpected Error: {ex.Message}");
 		}
 	}
 }

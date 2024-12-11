@@ -31,7 +31,7 @@ public class CommandExecutor
 				ExitApplication();
 				break;
 			default:
-				Console.WriteLine("Unknown command. Type 'help' for available commands.");
+				AnsiConsole.WriteLine("Unknown command. Type 'help' for available commands.");
 				break;
 		}
 	}
@@ -40,7 +40,7 @@ public class CommandExecutor
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			Console.WriteLine("Path cannot be empty. Usage: cd [path]");
+			AnsiConsole.WriteLine("Path cannot be empty. Usage: cd [path]");
 			return;
 		}
 
@@ -54,7 +54,7 @@ public class CommandExecutor
 		}
 		else
 		{
-			Console.WriteLine($"Directory not found: {newPath}");
+			AnsiConsole.WriteLine($"Directory not found: {newPath}");
 		}
 	}
 
@@ -62,7 +62,7 @@ public class CommandExecutor
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			Console.WriteLine("File path cannot be empty. Usage: convert [file_path]");
+			AnsiConsole.WriteLine("File path cannot be empty. Usage: convert [file_path]");
 			return;
 		}
 
@@ -71,39 +71,39 @@ public class CommandExecutor
 			try
 			{
 				_converter.ConvertFile(path);
-				Console.WriteLine($"File successfully converted: {path}");
+				AnsiConsole.WriteLine($"File successfully converted: {path}");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Failed to convert file: {ex.Message}");
+				AnsiConsole.WriteLine($"Failed to convert file: {ex.Message}");
 			}
 		}
 		else
 		{
-			Console.WriteLine($"File not found: {path}");
+			AnsiConsole.WriteLine($"File not found: {path}");
 		}
 	}
 
 	private void DisplayHelp()
 	{
-		Console.WriteLine("PixPorter Commands:");
-		Console.WriteLine("  cd [path]       - Change current directory");
-		Console.WriteLine("  convert [path]  - Convert image or directory");
-		Console.WriteLine("  config          - Configure conversions and output directory");
-		Console.WriteLine("  help            - Show this help menu");
-		Console.WriteLine("  exit            - Close PixPorter");
+		AnsiConsole.WriteLine("PixPorter Commands:");
+		AnsiConsole.WriteLine("  cd [path]       - Change current directory");
+		AnsiConsole.WriteLine("  convert [path]  - Convert image or directory");
+		AnsiConsole.WriteLine("  config          - Configure conversions and output directory");
+		AnsiConsole.WriteLine("  help            - Show this help menu");
+		AnsiConsole.WriteLine("  exit            - Close PixPorter");
 	}
 
 	private void Configure()
 	{
 		while (true)
 		{
-			Console.WriteLine("\nConfiguration Menu:");
-			Console.WriteLine("1. Modify Default Conversions");
-			Console.WriteLine("2. Set Permanent Output Directory");
-			Console.WriteLine("3. Clear Output Directory");
-			Console.WriteLine("4. View Current Configuration");
-			Console.WriteLine("0. Exit Configuration");
+			AnsiConsole.WriteLine("\nConfiguration Menu:");
+			AnsiConsole.WriteLine("1. Modify Default Conversions");
+			AnsiConsole.WriteLine("2. Set Permanent Output Directory");
+			AnsiConsole.WriteLine("3. Clear Output Directory");
+			AnsiConsole.WriteLine("4. View Current Configuration");
+			AnsiConsole.WriteLine("0. Exit Configuration");
 
 			string choice = AnsiConsole.Ask<string>("Choose an option: ");
 
@@ -132,14 +132,14 @@ public class CommandExecutor
 
 	private void ConfigureConversionRules()
 	{
-		Console.WriteLine("Current Default Conversions:");
+		AnsiConsole.WriteLine("Current Default Conversions:");
 		foreach (var conversion in _config.DefaultConversions)
 		{
-			Console.WriteLine($"{conversion.Key} -> {conversion.Value}");
+			AnsiConsole.WriteLine($"{conversion.Key} -> {conversion.Value}");
 		}
 
-		Console.WriteLine("\nEnter new conversion (e.g., '.png .jpg' to change PNG conversion)");
-		Console.WriteLine("Or press Enter to keep current settings");
+		AnsiConsole.WriteLine("\nEnter new conversion (e.g., '.png .jpg' to change PNG conversion)");
+		AnsiConsole.WriteLine("Or press Enter to keep current settings");
 
 		string input = (Console.ReadLine() ?? "").Trim();
 		if (string.IsNullOrEmpty(input)) return;
@@ -151,44 +151,44 @@ public class CommandExecutor
 			string targetFormat = parts[1].StartsWith('.') ? parts[1] : $".{parts[1]}";
 
 			_config.DefaultConversions[sourceFormat] = targetFormat;
-			Console.WriteLine($"Updated: {sourceFormat} -> {targetFormat}");
+			AnsiConsole.WriteLine($"Updated: {sourceFormat} -> {targetFormat}");
 		}
 		else
 		{
-			Console.WriteLine("Invalid input format");
+			AnsiConsole.WriteLine("Invalid input format");
 		}
 	}
 
 	private void SetOutputDirectory()
 	{
-		Console.WriteLine("Enter full path for permanent output directory:");
+		AnsiConsole.WriteLine("Enter full path for permanent output directory:");
 		string path = (Console.ReadLine() ?? "").Trim();
 
 		if (string.IsNullOrEmpty(path))
 		{
-			Console.WriteLine("Operation cancelled.");
+			AnsiConsole.WriteLine("Operation cancelled.");
 			return;
 		}
 
 		if (Directory.Exists(path))
 		{
 			_config.OutputDirectory = path;
-			Console.WriteLine($"Output directory set to: {path}");
+			AnsiConsole.WriteLine($"Output directory set to: {path}");
 		}
 		else
 		{
-			Console.WriteLine("Directory does not exist. Create it? (Y/N)");
+			AnsiConsole.WriteLine("Directory does not exist. Create it? (Y/N)");
 			if ((Console.ReadLine() ?? "").Trim().ToUpper() == "Y")
 			{
 				try
 				{
 					Directory.CreateDirectory(path);
 					_config.OutputDirectory = path;
-					Console.WriteLine($"Created and set output directory to: {path}");
+					AnsiConsole.WriteLine($"Created and set output directory to: {path}");
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine($"Could not create directory: {ex.Message}");
+					AnsiConsole.WriteLine($"Could not create directory: {ex.Message}");
 				}
 			}
 		}
@@ -197,29 +197,29 @@ public class CommandExecutor
 	private void ClearOutputDirectory()
 	{
 		_config.OutputDirectory = null;
-		Console.WriteLine("Output directory reset to default (same as input folder).\n");
+		AnsiConsole.WriteLine("Output directory reset to default (same as input folder).\n");
 	}
 
 	private void DisplayCurrentConfiguration()
 	{
-		Console.WriteLine("\nCurrent Configuration:");
+		AnsiConsole.WriteLine("\nCurrent Configuration:");
 
-		Console.WriteLine("Default Conversions:");
+		AnsiConsole.WriteLine("Default Conversions:");
 		foreach (var conversion in _config.DefaultConversions)
 		{
-			Console.WriteLine($"{conversion.Key} -> {conversion.Value}");
+			AnsiConsole.WriteLine($"{conversion.Key} -> {conversion.Value}");
 		}
 
-		Console.WriteLine("\nOutput Directory:");
+		AnsiConsole.WriteLine("\nOutput Directory:");
 		if (_config.OutputDirectory == null)
-			Console.WriteLine("Same as input folder (default)");
+			AnsiConsole.WriteLine("Same as input folder (default)");
 		else
-			Console.WriteLine(_config.OutputDirectory);
+			AnsiConsole.WriteLine(_config.OutputDirectory);
 	}
 
 	private void ExitApplication()
 	{
-		Console.WriteLine("Exiting application...");
+		AnsiConsole.WriteLine("Exiting application...");
 		Environment.Exit(0);
 	}
 }

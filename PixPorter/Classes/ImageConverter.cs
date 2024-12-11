@@ -2,6 +2,7 @@
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using Spectre.Console;
 
 public class ImageConverter
 {
@@ -19,7 +20,7 @@ public class ImageConverter
 
 		if (outputFormat == null)
 		{
-			Console.WriteLine($"Unsupported file type: {filePath}");
+			AnsiConsole.WriteLine($"Unsupported file type: {filePath}");
 			return;
 		}
 
@@ -43,11 +44,11 @@ public class ImageConverter
 					image.Save(outputPath, new JpegEncoder());
 					break;
 				default:
-					Console.WriteLine($"Unsupported output format: {outputFormat}");
+					AnsiConsole.WriteLine($"Unsupported output format: {outputFormat}");
 					return;
 			}
 
-			Console.WriteLine($"Converted: {filePath} -> {outputPath}");
+			AnsiConsole.WriteLine($"Converted: {filePath} -> {outputPath}");
 		}
 	}
 

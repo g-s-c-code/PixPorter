@@ -18,8 +18,8 @@ public class PixPorter
 	public void Run()
 	{
 		Console.Title = "PixPorter - Image Format Converter";
-		Console.WriteLine("PixPorter - Image Format Converter");
-		Console.WriteLine("Type 'help' for available commands");
+		AnsiConsole.WriteLine("PixPorter - Image Format Converter");
+		AnsiConsole.WriteLine("Type 'help' for available commands");
 
 		while (true)
 		{
