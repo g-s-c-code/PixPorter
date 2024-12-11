@@ -2,13 +2,17 @@
 
 public class PixPorter
 {
+	private readonly PixPorterConfig _config;
 	private readonly CommandProcessor _commandProcessor;
 
 	public PixPorter()
 	{
-		var config = new PixPorterConfig();
-		var converter = new ImageConverter(config);
-		_commandProcessor = new CommandProcessor(config, converter);
+		_config = new PixPorterConfig();
+		var converter = new ImageConverter(_config);
+		var commandParser = new CommandParser();
+		var commandExecutor = new CommandExecutor(_config, converter);
+
+		_commandProcessor = new CommandProcessor(commandParser, commandExecutor);
 	}
 
 	public void Run()
@@ -19,7 +23,9 @@ public class PixPorter
 
 		while (true)
 		{
-			string input = AnsiConsole.Ask<string>($"{_commandProcessor.CurrentDirectory}> ");
+			string currentDirectory = _config.CurrentDirectory;
+			string input = AnsiConsole.Ask<string>($"{currentDirectory}> ");
+
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
 
