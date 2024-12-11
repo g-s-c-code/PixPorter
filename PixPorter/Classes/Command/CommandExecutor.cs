@@ -21,8 +21,9 @@ public class CommandExecutor
 			case "convert":
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "");
 				break;
-			case "help":
-				DisplayHelp();
+			case "convert -a":
+			case "convert -all":
+				ConvertDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
 			case "config":
 				Configure();
@@ -31,7 +32,7 @@ public class CommandExecutor
 				ExitApplication();
 				break;
 			default:
-				AnsiConsole.WriteLine("Unknown command. Type 'help' for available commands.");
+				AnsiConsole.MarkupLine("[rosybrown]Unknown command. See 'COMMANDS' for available commands.[/]");
 				break;
 		}
 	}
@@ -84,14 +85,30 @@ public class CommandExecutor
 		}
 	}
 
-	private void DisplayHelp()
+	private void ConvertDirectory(string path)
 	{
-		AnsiConsole.WriteLine("Commands:");
-		AnsiConsole.WriteLine("  cd [path]       - Change current directory");
-		AnsiConsole.WriteLine("  convert [path]  - Convert image or directory");
-		AnsiConsole.WriteLine("  config          - Configure conversions and output directory");
-		AnsiConsole.WriteLine("  help            - Show this help menu");
-		AnsiConsole.WriteLine("  exit            - Close PixPorter");
+		if (string.IsNullOrWhiteSpace(path))
+		{
+			AnsiConsole.WriteLine("File path cannot be empty. Usage: convert -a [file_path]");
+			return;
+		}
+
+		if (File.Exists(path))
+		{
+			try
+			{
+				_converter.ConvertDirectory(path);
+				AnsiConsole.WriteLine($"Files successfully converted: {path}");
+			}
+			catch (Exception ex)
+			{
+				AnsiConsole.WriteLine($"Failed to convert file(s): {ex.Message}");
+			}
+		}
+		else
+		{
+			AnsiConsole.WriteLine($"File(s) not found: {path}");
+		}
 	}
 
 	private void Configure()
@@ -102,7 +119,6 @@ public class CommandExecutor
 			AnsiConsole.WriteLine("1. Modify Default Conversions");
 			AnsiConsole.WriteLine("2. Set Permanent Output Directory");
 			AnsiConsole.WriteLine("3. Clear Output Directory");
-			AnsiConsole.WriteLine("4. View Current Configuration");
 			AnsiConsole.WriteLine("0. Exit Configuration");
 
 			string choice = AnsiConsole.Ask<string>("Choose an option: ");
@@ -117,9 +133,6 @@ public class CommandExecutor
 					break;
 				case "3":
 					ClearOutputDirectory();
-					break;
-				case "4":
-					DisplayCurrentConfiguration();
 					break;
 				case "0":
 					return;
@@ -138,7 +151,7 @@ public class CommandExecutor
 			AnsiConsole.WriteLine($"{conversion.Key} -> {conversion.Value}");
 		}
 
-		AnsiConsole.WriteLine("\nEnter new conversion (e.g., '.png .jpg' to change PNG conversion)");
+		AnsiConsole.WriteLine("\nEnter new conversion (e.g., '.png .jpg' to change PNG conversion from current to JPG)");
 		AnsiConsole.WriteLine("Or press Enter to keep current settings");
 
 		string input = (Console.ReadLine() ?? "").Trim();

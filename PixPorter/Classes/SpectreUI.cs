@@ -22,27 +22,28 @@ public class SpectreUI
 
 		// Commands section
 		string commands =
-@"[grey85]cd (path)       - [rosybrown]Change directory[/]
-convert (path)  - [rosybrown]Convert image(s)[/]
-config          - [rosybrown]Configure settings[/]
-exit            - [rosybrown]Close PixPorter[/][/]";
+@"[grey85]cd (path)          [lightskyblue1]Change directory[/]
+convert (path)     [lightskyblue1]Convert image(s)[/]
+convert -a (path)  [lightskyblue1]Convert image(s)[/]
+config             [lightskyblue1]Configure settings[/]
+exit               [lightskyblue1]Close PixPorter[/][/]";
 
 		// Current settings section
-		string outputDirectory = _config.OutputDirectory ?? "Same as input folder\n";
+		string outputDirectory = (_config.OutputDirectory ?? "Same as input folder") + "\n";
 		string conversions = string.Join("\n", _config.DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
 		string currentSettings =
 $@"[grey85 underline]Output Directory[/]
-[rosybrown]{outputDirectory}[/]
+[lightskyblue1]{outputDirectory}[/]
 [grey85 underline]Conversion Formats[/]
 {conversions}";
 
 		// Instructions section
 		string instructions =
 @"[grey85 underline]Drag & Drop[/]
-[rosybrown]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
+[lightskyblue1]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
 
 [grey85 underline]Folder Conversion[/]
-[rosybrown]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
+[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
 
 		table.AddRow(commands, currentSettings, instructions);
 
