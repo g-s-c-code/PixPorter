@@ -16,10 +16,10 @@ public class CommandExecutor
 		switch (command.Name)
 		{
 			case "cd":
-				ChangeDirectory(command.Arguments.FirstOrDefault());
+				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
 			case "convert":
-				ConvertFile(command.Arguments.FirstOrDefault());
+				ConvertFile(command.Arguments.FirstOrDefault() ?? "");
 				break;
 			case "help":
 				DisplayHelp();
