@@ -34,7 +34,6 @@ public class PixPorter
 
 	public void RenderUI()
 	{
-		// Left table with instructions
 		var leftTableColumn = new Table();
 		leftTableColumn.AddColumn(new TableColumn("[bold]PixPorter - Image Format Converter and Compressor[/]"));
 		leftTableColumn.AddRow("");
@@ -44,15 +43,13 @@ public class PixPorter
 		leftTableColumn.AddRow("[white underline]Commands[/]");
 		leftTableColumn.AddRow("cd (path)       - Change current directory");
 		leftTableColumn.AddRow("convert (path)  - Convert image or directory");
-		leftTableColumn.AddRow("config          - Configure conversions and output directory");
+		leftTableColumn.AddRow("config          - Configure settings");
 		leftTableColumn.AddRow("exit            - Close PixPorter");
 		leftTableColumn.Border = TableBorder.None;
 
-		// Right table for dynamic current settings
 		var rightTableColumn = new Table();
 		rightTableColumn.AddColumn(new TableColumn("[white underline]Current Settings[/]"));
 
-		// Dynamic rows for current settings
 		rightTableColumn.AddRow("");
 		rightTableColumn.AddRow($"[white]Current Directory:[/] {_config.CurrentDirectory}");
 		rightTableColumn.AddRow($"[white]Output Directory:[/] {(_config.OutputDirectory ?? "Same as image input folder (default)")}");
@@ -63,17 +60,14 @@ public class PixPorter
 		{
 			rightTableColumn.AddRow($"[steelblue]  {conversion.Key} -> {conversion.Value}[/]");
 		}
-
 		rightTableColumn.Border = TableBorder.None;
 
-		// Main layout
 		var mainLayout = new Table();
 		mainLayout.AddColumn(new TableColumn(leftTableColumn));
 		mainLayout.AddColumn(new TableColumn(rightTableColumn));
-		mainLayout.Border = TableBorder.Double;
+		mainLayout.Border = TableBorder.None;
 		mainLayout.BorderColor(Color.White);
 
-		// Clear screen and render the updated UI
 		AnsiConsole.Clear();
 		AnsiConsole.Write(mainLayout);
 	}
