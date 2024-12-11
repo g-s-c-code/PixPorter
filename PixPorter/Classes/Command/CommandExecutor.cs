@@ -86,7 +86,7 @@ public class CommandExecutor
 
 	private void DisplayHelp()
 	{
-		AnsiConsole.WriteLine("PixPorter Commands:");
+		AnsiConsole.WriteLine("Commands:");
 		AnsiConsole.WriteLine("  cd [path]       - Change current directory");
 		AnsiConsole.WriteLine("  convert [path]  - Convert image or directory");
 		AnsiConsole.WriteLine("  config          - Configure conversions and output directory");
