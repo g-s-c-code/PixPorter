@@ -14,8 +14,8 @@
 
 	public static class Commands
 	{
-		public const string Convert = "1";
-		public const string Config = "2";
+		public const string ConvertFile = "1";
+		public const string ConvertAll = "2";
 		public const string SetConversion = "3";
 		public const string SetBasePathManual = "4";
 		public const string SetBasePathCurrent = "5";
