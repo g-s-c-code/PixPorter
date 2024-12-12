@@ -21,7 +21,7 @@ public class PixPorter
 
 		while (true)
 		{
-			AnsiConsole.WriteLine($"Current Directory: {_config.CurrentDirectory}");
+			AnsiConsole.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 			string input = AnsiConsole.Ask<string>("Enter file path, directory, or command:");
 
 			if (string.IsNullOrWhiteSpace(input))

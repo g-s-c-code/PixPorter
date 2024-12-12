@@ -3,6 +3,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using Spectre.Console;
+using static Constants;
 
 public class ImageConverter
 {
@@ -16,7 +17,7 @@ public class ImageConverter
 	public void ConvertFile(string filePath, string? targetFormat = null)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();
-		string outputFormat = targetFormat ?? _config.DefaultConversions.GetValueOrDefault(extension) ?? throw new Exception($"Unsupported file type: {filePath}");
+		string outputFormat = targetFormat ?? DefaultConversions.GetValueOrDefault(extension) ?? throw new Exception($"Unsupported file type: {filePath}");
 
 		string outputPath = Path.ChangeExtension(filePath, outputFormat);
 
@@ -49,7 +50,7 @@ public class ImageConverter
 		var files = Directory.GetFiles(directoryPath)
 			.Where(file =>
 				supportedExtensions.Contains(Path.GetExtension(file).ToLower()) &&
-				(targetFormat == null || _config.DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower())))
+				(targetFormat == null || DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower())))
 			.ToList();
 
 		if (!files.Any())

@@ -26,7 +26,7 @@ public class CommandExecutor
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
 				break;
 			case Commands.ConvertAll:
-				ConvertDirectory(command.Arguments.FirstOrDefault() ?? _config.CurrentDirectory, command.TargetFormat);
+				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
 				AnsiConsole.MarkupLine("[red]Unknown command.[/]");
@@ -44,11 +44,11 @@ public class CommandExecutor
 
 		string newPath = Path.IsPathRooted(path)
 			? path
-			: Path.GetFullPath(Path.Combine(_config.CurrentDirectory, path));
+			: Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
 
 		if (Directory.Exists(newPath))
 		{
-			_config.CurrentDirectory = newPath;
+			Directory.SetCurrentDirectory(path);
 		}
 		else
 		{

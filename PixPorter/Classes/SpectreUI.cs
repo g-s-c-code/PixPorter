@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using static Constants;
 
 public class SpectreUI
 {
@@ -29,8 +30,8 @@ config             [lightskyblue1]Configure settings[/]
 exit               [lightskyblue1]Close PixPorter[/][/]";
 
 		// Current settings section
-		string outputDirectory = (_config.OutputDirectory ?? "Same as input folder") + "\n";
-		string conversions = string.Join("\n", _config.DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
+		string outputDirectory = ("Same as input folder") + "\n"; //fix custom Output dir support
+		string conversions = string.Join("\n", DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
 		string currentSettings =
 $@"[grey85 underline]Output Directory[/]
 [lightskyblue1]{outputDirectory}[/]

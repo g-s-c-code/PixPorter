@@ -28,4 +28,12 @@
 
 		public static readonly string[] SupportedFormats = { Png, Jpg, Jpeg, Webp };
 	}
+
+	public static Dictionary<string, string> DefaultConversions { get; } = new()
+	{
+		{ ".png", ".webp" },
+		{ ".jpg", ".webp" },
+		{ ".jpeg", ".webp" },
+		{ ".webp", ".png" }
+	};
 }
