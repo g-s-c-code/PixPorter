@@ -2,11 +2,10 @@
 
 public class CommandParser
 {
+	private readonly string[] _supportedFileExtensions = { ".png", ".jpg", ".jpeg", ".webp" }; // ".bmp", ".gif", ".tiff"
+
 	public Command Parse(string input)
 	{
-		if (string.IsNullOrWhiteSpace(input))
-			throw new CommandException("No command entered.");
-
 		if (input == "q" || input == "quit")
 		{
 			return new Command(Commands.Quit, Array.Empty<string>());
@@ -15,12 +14,11 @@ public class CommandParser
 		if (input.StartsWith("cd "))
 		{
 			string path = input.Substring(3).Trim();
-			return new Command(Commands.ChangeDirectory, new[] { path });
+			return new Command(Commands.ChangeDirectory, [path]);
 		}
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-		string[] supportedExtensions = new[] { ".png", ".jpg", ".jpeg", ".webp" }; // ".bmp", ".gif", ".tiff"
 
 		if (parts.Contains("-ca"))
 		{
@@ -42,11 +40,7 @@ public class CommandParser
 		{
 			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), potentialFile);
 
-			string[] checkPaths = new[]
-			{
-				potentialFile,
-				relativePath
-			};
+			string[] checkPaths = [potentialFile, relativePath];
 
 			resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
 
