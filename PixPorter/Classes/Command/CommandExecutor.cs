@@ -19,10 +19,10 @@ public class CommandExecutor
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
 			case "convert":
-				ConvertFile(command.Arguments.FirstOrDefault() ?? "");
+				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
 				break;
 			case "convert-all":
-				ConvertDirectory(command.Arguments.FirstOrDefault() ?? _config.CurrentDirectory);
+				ConvertDirectory(command.Arguments.FirstOrDefault() ?? _config.CurrentDirectory, command.TargetFormat);
 				break;
 			default:
 				AnsiConsole.MarkupLine("[red]Unknown command.[/]");
@@ -52,7 +52,7 @@ public class CommandExecutor
 		}
 	}
 
-	private void ConvertFile(string path)
+	private void ConvertFile(string path, string? targetFormat)
 	{
 		if (!File.Exists(path))
 		{
@@ -62,7 +62,7 @@ public class CommandExecutor
 
 		try
 		{
-			_converter.ConvertFile(path);
+			_converter.ConvertFile(path, targetFormat);
 		}
 		catch (Exception ex)
 		{
@@ -70,7 +70,7 @@ public class CommandExecutor
 		}
 	}
 
-	private void ConvertDirectory(string path)
+	private void ConvertDirectory(string path, string? targetFormat)
 	{
 		if (!Directory.Exists(path))
 		{
@@ -80,7 +80,7 @@ public class CommandExecutor
 
 		try
 		{
-			_converter.ConvertDirectory(path);
+			_converter.ConvertDirectory(path, targetFormat);
 		}
 		catch (Exception ex)
 		{

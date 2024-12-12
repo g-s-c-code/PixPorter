@@ -13,16 +13,10 @@ public class ImageConverter
 		_config = config;
 	}
 
-	public void ConvertFile(string filePath)
+	public void ConvertFile(string filePath, string? targetFormat = null)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();
-		string? outputFormat = _config.DefaultConversions.GetValueOrDefault(extension);
-
-		if (outputFormat == null)
-		{
-			AnsiConsole.MarkupLine($"[red]Unsupported file type: {filePath}[/]");
-			return;
-		}
+		string outputFormat = targetFormat ?? _config.DefaultConversions.GetValueOrDefault(extension) ?? throw new Exception($"Unsupported file type: {filePath}");
 
 		string outputPath = Path.ChangeExtension(filePath, outputFormat);
 
@@ -39,28 +33,43 @@ public class ImageConverter
 			case ".jpeg":
 				image.Save(outputPath, new JpegEncoder());
 				break;
+			default:
+				throw new Exception($"Unsupported conversion target: {outputFormat}");
 		}
 
 		AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
 	}
 
-	public void ConvertDirectory(string directoryPath)
+	public void ConvertDirectory(string directoryPath, string? targetFormat = null)
 	{
+		// Define supported image extensions
+		string[] supportedExtensions = new[] { ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tiff" };
+
+		// Get all files with supported image extensions
 		var files = Directory.GetFiles(directoryPath)
-			.Where(file => _config.DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower()))
+			.Where(file =>
+				supportedExtensions.Contains(Path.GetExtension(file).ToLower()) &&
+				(targetFormat == null || _config.DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower())))
 			.ToList();
 
 		if (!files.Any())
 		{
-			AnsiConsole.MarkupLine("[red]No supported image files found in the directory.[/]");
+			AnsiConsole.MarkupLine("[yellow]No supported image files found in the directory.[/]");
 			return;
 		}
 
 		foreach (var file in files)
 		{
-			ConvertFile(file);
+			try
+			{
+				ConvertFile(file, targetFormat);
+			}
+			catch (Exception ex)
+			{
+				AnsiConsole.MarkupLine($"[red]Failed to convert {file}: {ex.Message}[/]");
+			}
 		}
 
-		AnsiConsole.MarkupLine("[green]All files have been successfully processed![/]");
+		AnsiConsole.MarkupLine("[green]All supported files have been successfully processed![/]");
 	}
 }
