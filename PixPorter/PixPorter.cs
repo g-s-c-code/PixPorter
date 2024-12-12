@@ -1,14 +1,30 @@
 ﻿public class PixPorter
 {
-	private readonly CommandProcessor _commandProcessor;
+	private readonly CommandParser _commandParser;
+	private readonly CommandService _commandExecutor;
 
 	public PixPorter()
 	{
 		var converter = new ImageConverter();
-		var commandParser = new CommandParser();
-		var commandExecutor = new CommandExecutor(converter);
+		_commandParser = new CommandParser();
+		_commandExecutor = new CommandService(converter);
+	}
 
-		_commandProcessor = new CommandProcessor(commandParser, commandExecutor);
+	public void ProcessCommand(string input)
+	{
+		try
+		{
+			var command = _commandParser.Parse(input);
+			_commandExecutor.ExecuteCommand(command);
+		}
+		catch (CommandException ex)
+		{
+			UI.WriteLine($"Command Error: {ex.Message}");
+		}
+		catch (Exception ex)
+		{
+			UI.WriteLine($"Unexpected Error: {ex.Message}");
+		}
 	}
 
 	public void Run()
@@ -24,7 +40,7 @@
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
 
-			_commandProcessor.ProcessCommand(input);
+			ProcessCommand(input);
 		}
 	}
 }
