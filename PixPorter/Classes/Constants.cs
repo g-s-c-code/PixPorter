@@ -26,7 +26,10 @@
 		public const string Jpeg = ".jpeg";
 		public const string Webp = ".webp";
 
-		public static readonly string[] SupportedFormats = { Png, Jpg, Jpeg, Webp };
+		public static readonly HashSet<string> SupportedFormats = new(StringComparer.OrdinalIgnoreCase)
+		{
+			Png, Jpg, Jpeg, Webp
+		};
 	}
 
 	public static Dictionary<string, string> DefaultConversions { get; } = new()
