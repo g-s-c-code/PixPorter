@@ -1,7 +1,6 @@
 ﻿public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
-	private readonly DirectoriesService _directoriesService;
 
 	public PixPorter()
 	{
@@ -9,7 +8,6 @@
 		var commandParser = new CommandParser();
 		var commandExecutor = new CommandExecutor(converter);
 
-		_directoriesService = new DirectoriesService();
 		_commandProcessor = new CommandProcessor(commandParser, commandExecutor);
 	}
 
@@ -19,7 +17,7 @@
 
 		while (true)
 		{
-			UI.RenderUI(_directoriesService.GetDirectories(Directory.GetCurrentDirectory()), _directoriesService.GetImageFiles(Directory.GetCurrentDirectory()));
+			UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
 			UI.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 			var input = UI.ReadLine("Enter command:");
 
