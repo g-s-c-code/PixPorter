@@ -19,11 +19,11 @@
 		}
 		catch (CommandException ex)
 		{
-			UI.WriteLine($"Command Error: {ex.Message}");
+			UI.WriteException($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			UI.WriteLine($"Unexpected Error: {ex.Message}");
+			UI.WriteException($"Unexpected Error: {ex.Message}");
 		}
 	}
 
@@ -34,8 +34,8 @@
 		while (true)
 		{
 			UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
-			UI.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
-			var input = UI.ReadLine("Enter command:");
+			UI.Write($"Current Directory: {Directory.GetCurrentDirectory()}");
+			var input = UI.Read("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

@@ -70,13 +70,19 @@ exit               [lightskyblue1]Close PixPorter[/][/]";
 		return tree;
 	}
 
-	public static void WriteLine(string output)
+	public static string Read(string input)
+	{
+		return AnsiConsole.Ask<string>(input);
+	}
+
+	public static void Write(string output)
 	{
 		AnsiConsole.WriteLine(output);
 	}
 
-	public static string ReadLine(string input)
+	public static void WriteException(string output)
 	{
-		return AnsiConsole.Ask<string>(input);
+		AnsiConsole.MarkupLine($"[bold rosybrown]{output}[/]");
+		Console.ReadKey();
 	}
 }

@@ -27,7 +27,7 @@ public class CommandService
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.WriteLine("[red]Unknown command.[/]");
+				UI.Write("[red]Unknown command.[/]");
 				break;
 		}
 	}
@@ -59,7 +59,7 @@ public class CommandService
 	{
 		if (!File.Exists(path))
 		{
-			UI.WriteLine($"File not found: {path}");
+			UI.Write($"File not found: {path}");
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class CommandService
 		}
 		catch (Exception ex)
 		{
-			UI.WriteLine($"Failed to convert file: {ex.Message}");
+			UI.Write($"Failed to convert file: {ex.Message}");
 		}
 	}
 
@@ -77,7 +77,7 @@ public class CommandService
 	{
 		if (!Directory.Exists(path))
 		{
-			UI.WriteLine($"Directory not found: {path}");
+			UI.Write($"Directory not found: {path}");
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class CommandService
 		}
 		catch (Exception ex)
 		{
-			UI.WriteLine($"Failed to convert directory: {ex.Message}");
+			UI.Write($"Failed to convert directory: {ex.Message}");
 		}
 	}
 }
