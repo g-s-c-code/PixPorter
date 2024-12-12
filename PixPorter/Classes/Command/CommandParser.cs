@@ -2,32 +2,25 @@
 {
 	public Command Parse(string input)
 	{
-		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-		if (parts.Length == 0)
-		{
+		if (string.IsNullOrWhiteSpace(input))
 			throw new CommandException("No command entered.");
-		}
 
-		string commandName = parts[0].ToLower();
-		var arguments = parts.Skip(1);
+		if (input == "-ca")
+			return new Command("convert-all", Array.Empty<string>());
 
-		if (IsImagePath(input))
+		if (Path.IsPathRooted(input))
 		{
-			return new Command("convert", new[] { input });
+			return Directory.Exists(input)
+				? new Command("convert-all", new[] { input })
+				: new Command("convert", new[] { input });
 		}
 
-		return new Command(commandName, arguments);
-	}
+		if (input.StartsWith("cd "))
+		{
+			string path = input.Substring(3).Trim();
+			return new Command("cd", new[] { path });
+		}
 
-	private bool IsImagePath(string input)
-	{
-		string[] supportedExtensions = { ".png", ".jpg", ".jpeg", ".webp" };
-		string extension = Path.GetExtension(input).ToLower();
-
-		if (!supportedExtensions.Contains(extension))
-			return false;
-
-		return File.Exists(input);
+		throw new CommandException("Invalid command or path.");
 	}
 }

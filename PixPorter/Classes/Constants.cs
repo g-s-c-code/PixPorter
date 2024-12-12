@@ -23,7 +23,7 @@
 		public const string ChangeTheme = "7";
 		public const string Help = "h";
 		public const string Quit = "q";
-		public const string ChangeDirectoryPrefix = "cd";
+		public const string ChangeDirectory = "cd";
 	}
 
 	public const string DefaultFileType = "*.cs";

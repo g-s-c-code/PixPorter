@@ -3,14 +3,11 @@
 public class PixPorter
 {
 	private readonly PixPorterConfig _config;
-	private readonly SpectreUI _ui;
 	private readonly CommandProcessor _commandProcessor;
 
 	public PixPorter()
 	{
 		_config = new PixPorterConfig();
-		_ui = new SpectreUI(_config);
-
 		var converter = new ImageConverter(_config);
 		var commandParser = new CommandParser();
 		var commandExecutor = new CommandExecutor(_config, converter);
@@ -21,25 +18,14 @@ public class PixPorter
 	public void Run()
 	{
 		Console.Title = "PixPorter - Image Format Converter";
-		_ui.RenderUI();
-
-		Queue<string> commandHistory = new Queue<string>();
 
 		while (true)
 		{
 			AnsiConsole.WriteLine($"Current Directory: {_config.CurrentDirectory}");
-			string input = AnsiConsole.Ask<string>("Enter command:");
+			string input = AnsiConsole.Ask<string>("Enter file path, directory, or command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
-
-			commandHistory.Enqueue(input);
-
-			if (commandHistory.Count > 0)
-			{
-				commandHistory.Clear();
-				_ui.RenderUI();
-			}
 
 			_commandProcessor.ProcessCommand(input);
 		}
