@@ -7,13 +7,6 @@ using static Constants;
 
 public class ImageConverter
 {
-	private readonly PixPorterConfig _config;
-
-	public ImageConverter(PixPorterConfig config)
-	{
-		_config = config;
-	}
-
 	public void ConvertFile(string filePath, string? targetFormat = null)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();

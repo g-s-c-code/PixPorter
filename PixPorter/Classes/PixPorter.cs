@@ -1,17 +1,15 @@
-﻿using Spectre.Console;
-
-public class PixPorter
+﻿public class PixPorter
 {
-	private readonly PixPorterConfig _config;
 	private readonly CommandProcessor _commandProcessor;
+	private readonly DirectoriesService _directoriesService;
 
 	public PixPorter()
 	{
-		_config = new PixPorterConfig();
-		var converter = new ImageConverter(_config);
+		var converter = new ImageConverter();
 		var commandParser = new CommandParser();
-		var commandExecutor = new CommandExecutor(_config, converter);
+		var commandExecutor = new CommandExecutor(converter);
 
+		_directoriesService = new DirectoriesService();
 		_commandProcessor = new CommandProcessor(commandParser, commandExecutor);
 	}
 
@@ -21,8 +19,9 @@ public class PixPorter
 
 		while (true)
 		{
-			AnsiConsole.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
-			string input = AnsiConsole.Ask<string>("Enter file path, directory, or command:");
+			UI.RenderUI(_directoriesService.GetDirectories(Directory.GetCurrentDirectory()), _directoriesService.GetFiles(Directory.GetCurrentDirectory()));
+			UI.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
+			var input = UI.ReadLine("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

@@ -61,7 +61,7 @@ public class CommandParser
 		if (resolvedFilePath != null && formatFlag != null)
 		{
 			return new Command("convert",
-				new[] { resolvedFilePath },
+				[resolvedFilePath],
 				MapFormatFlag(formatFlag));
 		}
 

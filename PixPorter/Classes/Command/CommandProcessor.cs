@@ -20,11 +20,11 @@ public class CommandProcessor
 		}
 		catch (CommandException ex)
 		{
-			AnsiConsole.WriteLine($"Command Error: {ex.Message}");
+			UI.WriteLine($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			AnsiConsole.WriteLine($"Unexpected Error: {ex.Message}");
+			UI.WriteLine($"Unexpected Error: {ex.Message}");
 		}
 	}
 }

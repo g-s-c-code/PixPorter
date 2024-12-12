@@ -31,9 +31,9 @@
 
 	public static Dictionary<string, string> DefaultConversions { get; } = new()
 	{
-		{ ".png", ".webp" },
-		{ ".jpg", ".webp" },
-		{ ".jpeg", ".webp" },
-		{ ".webp", ".png" }
+		{ FileFormats.Png, FileFormats.Webp },
+		{ FileFormats.Jpg, FileFormats.Webp },
+		{ FileFormats.Jpeg, FileFormats.Webp },
+		{ FileFormats.Webp, FileFormats.Png }
 	};
 }

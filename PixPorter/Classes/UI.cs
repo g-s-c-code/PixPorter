@@ -1,13 +1,10 @@
 ﻿using Spectre.Console;
+using Spectre.Console.Rendering;
 using static Constants;
 
-public class SpectreUI
+public static class UI
 {
-	private readonly PixPorterConfig _config;
-
-	public SpectreUI(PixPorterConfig config) => _config = config;
-
-	public void RenderUI()
+	public static void RenderUI(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
 	{
 		var table = new Table
 		{
@@ -47,8 +44,42 @@ $@"[grey85 underline]Output Directory[/]
 [lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
 
 		table.AddRow(commands, currentSettings, instructions);
+		table.AddRow(DisplayTree("\nFolders:", directoriesTree), DisplayTree("\nFiles:", filesTree));
 
-		AnsiConsole.Clear();
+		Clear();
 		AnsiConsole.Write(table);
+	}
+
+	public static void Clear()
+	{
+		AnsiConsole.Clear();
+	}
+
+	public static void WriteLine(string output)
+	{
+		AnsiConsole.WriteLine(output);
+	}
+
+	public static string ReadLine(string input)
+	{
+		return AnsiConsole.Ask<string>(input);
+	}
+
+	public static IRenderable DisplayTree(string header, IEnumerable<string> items)
+	{
+		var tree = new Tree(header)
+		{
+			Style = new Style(foreground: Color.RosyBrown)
+		};
+		foreach (var item in items)
+		{
+			tree.AddNode(Text(Markup.Escape(item), Color.White));
+		}
+		return tree;
+	}
+
+	public static string Text(string text, Color? color = null)
+	{
+		return $"[bold {color ?? Color.White}]{text}[/]";
 	}
 }

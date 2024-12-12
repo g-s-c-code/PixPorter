@@ -3,12 +3,10 @@ using static Constants;
 
 public class CommandExecutor
 {
-	private readonly PixPorterConfig _config;
 	private readonly ImageConverter _converter;
 
-	public CommandExecutor(PixPorterConfig config, ImageConverter converter)
+	public CommandExecutor(ImageConverter converter)
 	{
-		_config = config;
 		_converter = converter;
 	}
 
@@ -29,7 +27,7 @@ public class CommandExecutor
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				AnsiConsole.MarkupLine("[red]Unknown command.[/]");
+				UI.WriteLine("[red]Unknown command.[/]");
 				break;
 		}
 	}
@@ -53,6 +51,7 @@ public class CommandExecutor
 		else
 		{
 			AnsiConsole.WriteLine($"Directory not found: {newPath}");
+			Console.ReadKey();
 		}
 	}
 
@@ -60,7 +59,7 @@ public class CommandExecutor
 	{
 		if (!File.Exists(path))
 		{
-			AnsiConsole.WriteLine($"File not found: {path}");
+			UI.WriteLine($"File not found: {path}");
 			return;
 		}
 
@@ -70,7 +69,7 @@ public class CommandExecutor
 		}
 		catch (Exception ex)
 		{
-			AnsiConsole.WriteLine($"Failed to convert file: {ex.Message}");
+			UI.WriteLine($"Failed to convert file: {ex.Message}");
 		}
 	}
 
@@ -78,7 +77,7 @@ public class CommandExecutor
 	{
 		if (!Directory.Exists(path))
 		{
-			AnsiConsole.WriteLine($"Directory not found: {path}");
+			UI.WriteLine($"Directory not found: {path}");
 			return;
 		}
 
@@ -88,7 +87,7 @@ public class CommandExecutor
 		}
 		catch (Exception ex)
 		{
-			AnsiConsole.WriteLine($"Failed to convert directory: {ex.Message}");
+			UI.WriteLine($"Failed to convert directory: {ex.Message}");
 		}
 	}
 }
