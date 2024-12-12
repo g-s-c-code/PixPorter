@@ -16,7 +16,7 @@ public class CommandProcessor
 		try
 		{
 			var command = _commandParser.Parse(input);
-			_commandExecutor.Execute(command);
+			_commandExecutor.ExecuteCommand(command);
 		}
 		catch (CommandException ex)
 		{

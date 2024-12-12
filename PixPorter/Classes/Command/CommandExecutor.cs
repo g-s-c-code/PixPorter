@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using static Constants;
 
 public class CommandExecutor
 {
@@ -11,17 +12,20 @@ public class CommandExecutor
 		_converter = converter;
 	}
 
-	public void Execute(Command command)
+	public void ExecuteCommand(Command command)
 	{
-		switch (command.Name)
+		switch (command.Name.ToLower())
 		{
-			case "cd":
+			case Commands.Quit:
+				Environment.Exit(0);
+				break;
+			case Commands.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
-			case "convert":
+			case Commands.ConvertFile:
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
 				break;
-			case "convert-all":
+			case Commands.ConvertAll:
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? _config.CurrentDirectory, command.TargetFormat);
 				break;
 			default:
