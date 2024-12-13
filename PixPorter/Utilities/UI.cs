@@ -25,7 +25,7 @@ public static class UI
 		return new Panel(new Rows(new IRenderable[] { currentDirectoryPanel, directoryTable }))
 		{
 			BorderStyle = Color.LightSkyBlue1,
-			Header = new PanelHeader("Current Directory"),
+			Header = new PanelHeader("Current Directory".ToUpper()),
 			Padding = new Padding(1),
 		};
 	}
@@ -53,18 +53,18 @@ public static class UI
 
 		var sections = new[]
 		{
-		CreateSection("Usage Instructions", new[]
+		CreateSection("Usage Instructions".ToUpper(), new[]
 		{
 			("Drag & Drop", "Drag an image into the window, then press 'Enter' to convert it."),
 			("Folder Navigation", "Use 'cd [[path]]' to navigate to a folder, then use flag '-ca' to convert all files.")
 		}),
-		CreateSection("Commands", new[]
+		CreateSection("Commands".ToUpper(), new[]
 		{
 			("cd", "Change the current working directory."),
 			("q", "Quit the application."),
 			("help", "Display help information.")
 		}),
-		CreateSection("Flags", new[]
+		CreateSection("Flags".ToUpper(), new[]
 		{
 			("-ca", "Convert all files in a directory."),
 			("-png", "Set output format to PNG."),
@@ -72,7 +72,7 @@ public static class UI
 			("-jpeg", "Set output format to JPEG."),
 			("-webp", "Set output format to WEBP.")
 		}),
-		CreateSection("Pre-set Default Conversion Formats",
+		CreateSection("Default Conversion Formats".ToUpper(),
 			DefaultConversions.Select(c => (c.Key, $"{c.Key} -> {c.Value}")).ToArray())
 	};
 
@@ -87,7 +87,7 @@ public static class UI
 	private static IRenderable CreateSection(string header, (string Key, string Description)[] items)
 	{
 		var sectionContent = new StringBuilder();
-		sectionContent.AppendLine($"[lightskyblue1 bold underline]{header}[/]");
+		sectionContent.AppendLine($"[lightskyblue1 bold]{header}[/]");
 
 		foreach (var (key, description) in items)
 		{
