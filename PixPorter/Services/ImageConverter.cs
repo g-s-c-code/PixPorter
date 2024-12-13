@@ -37,13 +37,9 @@ public class ImageConverter
 
 	public void ConvertDirectory(string directoryPath, string? targetFormat = null)
 	{
-		// Define supported image extensions
-		string[] supportedExtensions = new[] { ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tiff" };
-
-		// Get all files with supported image extensions
 		var files = Directory.GetFiles(directoryPath)
 			.Where(file =>
-				supportedExtensions.Contains(Path.GetExtension(file).ToLower()) &&
+				FileFormats.SupportedFormats.Contains(Path.GetExtension(file).ToLower()) &&
 				(targetFormat == null || DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower())))
 			.ToList();
 
