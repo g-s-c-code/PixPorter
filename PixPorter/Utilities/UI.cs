@@ -49,7 +49,6 @@ public static class UI
 			Width = LayoutWidth
 		};
 
-		// Add two columns to the table
 		table.AddColumn(new TableColumn("")).HideHeaders();
 
 		var sections = new[]
@@ -79,9 +78,7 @@ public static class UI
 
 		foreach (var section in sections)
 		{
-			// Ensure we're adding rows that match the table's column count
 			table.AddRow(section);
-			table.AddEmptyRow();
 		}
 
 		return table;
