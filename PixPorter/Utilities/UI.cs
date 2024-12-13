@@ -11,7 +11,8 @@ public static class UI
 		var layout = CreateMainLayout(directoriesTree, filesTree);
 
 		var mainTable = new Table()
-			.AddColumn(new TableColumn(layout));
+			.AddColumn(new TableColumn(layout))
+			.Border(TableBorder.Horizontal);
 
 		AnsiConsole.Clear();
 		AnsiConsole.Write(mainTable);
@@ -23,13 +24,22 @@ public static class UI
 		var currentDirectoryPanel = CreateCurrentDirectoryPanel();
 		var directoryTable = CreateDirectoryTable(directoriesTree, filesTree);
 
+		// Create a panel for the entire Right column content
+		var rightColumnPanel = new Panel(new Rows(new IRenderable[]
+		{
+		currentDirectoryPanel,
+        directoryTable
+		}))
+		{
+			BorderStyle = Color.SteelBlue,
+			Header = new PanelHeader("Current Directory"),
+			Padding = new Padding(1),
+		};
+
 		return new Layout("Root")
 			.SplitColumns(
 				new Layout("Left").Update(infoTable),
-				new Layout("Right")
-					.SplitRows(
-						new Layout("TopRight").Size(3).Update(currentDirectoryPanel),
-						new Layout("BottomRight").Update(directoryTable)));
+				new Layout("Right").Update(rightColumnPanel));
 	}
 
 	private static Table CreateInfoTable()
@@ -53,11 +63,13 @@ public static class UI
 
 	private static Panel CreateCurrentDirectoryPanel()
 	{
-		return new Panel($"Current Directory: {Directory.GetCurrentDirectory()}")
+		var currentDirectory = new TextPath(Directory.GetCurrentDirectory());
+
+		return new Panel(currentDirectory)
 		{
-			Width = LayoutWidth,
 			Border = BoxBorder.None,
-			Padding = new Padding(0)
+			Padding = new Padding(0, 0, 2, 0),
+			Width = LayoutWidth,
 		};
 	}
 
@@ -96,8 +108,7 @@ public static class UI
 [lightskyblue1]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
 
 [grey85 underline]Folder Conversion[/]
-[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]
-";
+[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
 	}
 
 	private static string DisplayCommands()
