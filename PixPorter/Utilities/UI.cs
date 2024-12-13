@@ -35,6 +35,8 @@ public static class UI
 		var layoutTable = new Table();
 		layoutTable.AddColumn(new TableColumn(infoTable));
 		layoutTable.AddColumn(new TableColumn(rightColumnPanel));
+		layoutTable.Columns[0].Padding = new Padding(0);
+		layoutTable.Columns[1].Padding = new Padding(0);
 		layoutTable.Border = TableBorder.Horizontal;
 		return layoutTable;
 	}
