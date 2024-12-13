@@ -33,7 +33,8 @@
 
 		while (true)
 		{
-			UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
+			UI.RenderUIs(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
+			//UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
 			UI.Write($"Current Directory: {Directory.GetCurrentDirectory()}");
 			var input = UI.Read("Enter command:");
 
