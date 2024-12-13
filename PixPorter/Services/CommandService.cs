@@ -46,7 +46,7 @@ public class CommandService
 
 		if (Directory.Exists(newPath))
 		{
-			Directory.SetCurrentDirectory(path);
+			Directory.SetCurrentDirectory(newPath);
 		}
 		else
 		{

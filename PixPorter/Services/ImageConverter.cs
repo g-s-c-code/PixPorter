@@ -32,6 +32,7 @@ public class ImageConverter
 		}
 
 		AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
+		Console.ReadKey();
 	}
 
 	public void ConvertDirectory(string directoryPath, string? targetFormat = null)
