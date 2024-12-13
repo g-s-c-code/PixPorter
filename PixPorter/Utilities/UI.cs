@@ -1,114 +1,76 @@
 ﻿using Spectre.Console;
 using Spectre.Console.Rendering;
+using System.Collections.Generic;
+using System.Linq;
 using static Constants;
 
 public static class UI
 {
-	public static void RenderUIs(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
-	{
-		var mainLayout = new Table();
-
-		const int width = 100;
-
-		var directoryTable = new Table();
-		directoryTable.Width = width;
-		directoryTable.Border = TableBorder.None;
-		directoryTable.AddColumn(new TableColumn(CreateTree("Folders:", directoriesTree)));
-		directoryTable.AddColumn(new TableColumn(CreateTree("Image Files:", filesTree)));
-
-		var currentDirectory = new Panel($"Current Directory: {Directory.GetCurrentDirectory()}");
-		currentDirectory.Width = width;
-		currentDirectory.Border = BoxBorder.None;
-		currentDirectory.Padding = new Padding(0);
-
-		var instructionsTable = new Table();
-		instructionsTable.Width = width;
-		instructionsTable.Border = TableBorder.None;
-		instructionsTable.AddColumn(BuildInstructionsSection());
-		instructionsTable.AddEmptyRow();
-		instructionsTable.AddRow(DisplayDefaultConversions());
-
-		var interactionsTable = new Table();
-		interactionsTable.Width = width;
-		interactionsTable.Border = TableBorder.None;
-		interactionsTable.AddColumn(BuildCommandsSection());
-		interactionsTable.AddEmptyRow();
-		interactionsTable.AddRow(BuildFlagsSection());
-
-		var layout = new Layout("Root")
-			.SplitColumns(
-				new Layout("Left")
-					.SplitRows(
-						new Layout("TopLeft").Size(5),
-						new Layout("BottomLeft")),
-				new Layout("Right")
-					.SplitRows(
-						new Layout("TopRight").Size(3),
-						new Layout("BottomRight")));
-
-		layout["TopLeft"].Update(instructionsTable);
-		layout["BottomLeft"].Update(interactionsTable);
-		layout["TopRight"].Update(currentDirectory);
-		layout["BottomRight"].Update(directoryTable);
-
-		mainLayout.AddColumn(new TableColumn(layout));
-
-		AnsiConsole.Clear();
-		AnsiConsole.Write(mainLayout);
-	}
+	private const int LayoutWidth = 100;
 
 	public static void RenderUI(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
 	{
-		var table = new Table
-		{
-			Border = TableBorder.Square,
-			UseSafeBorder = true,
-			ShowRowSeparators = true,
-			Title = new TableTitle("PixPorter - Image Format Converter").SetStyle("white bold")
-		};
+		var layout = CreateMainLayout(directoriesTree, filesTree);
 
-		table.AddColumn(new TableColumn("[white bold]COMMANDS[/]").Width(50));
-		table.AddColumn(new TableColumn("[white bold]CURRENT SETTINGS[/]").Width(50));
-		table.AddColumn(new TableColumn("[white bold]INSTRUCTIONS[/]").Width(50));
-
-		table.AddRow(BuildCommandsSection(), DisplayDefaultConversions(), BuildInstructionsSection());
-		table.AddRow(CreateTree("Folders:", directoriesTree), CreateTree("Image Files:", filesTree));
+		var mainTable = new Table()
+			.AddColumn(new TableColumn(layout));
 
 		AnsiConsole.Clear();
-		AnsiConsole.Write(table);
+		AnsiConsole.Write(mainTable);
 	}
 
-	private static string BuildCommandsSection()
+	private static Layout CreateMainLayout(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
 	{
-		return @"[grey85]cd (path)          [lightskyblue1]Change directory[/]
-convert (path)     [lightskyblue1]Convert image(s)[/]
-convert -a (path)  [lightskyblue1]Convert image(s)[/]
-config             [lightskyblue1]Configure settings[/]
-exit               [lightskyblue1]Close PixPorter[/][/]";
+		var instructionsTable = CreateInstructionsTable();
+		var currentDirectoryPanel = CreateCurrentDirectoryPanel();
+		var directoryTable = CreateDirectoryTable(directoriesTree, filesTree);
+
+		return new Layout("Root")
+			.SplitColumns(
+				new Layout("Left").Update(instructionsTable),
+				new Layout("Right")
+					.SplitRows(
+						new Layout("TopRight").Size(3).Update(currentDirectoryPanel),
+						new Layout("BottomRight").Update(directoryTable)));
 	}
 
-	private static string BuildFlagsSection()
+	private static Table CreateInstructionsTable()
 	{
-		return @"path -ca    [lightskyblue1]Convert image(s)[/]
-path -png  [lightskyblue1]Convert to png[/]
--jpg             [lightskyblue1]Convert to .jpg[/]";
+		var table = new Table
+		{
+			Width = LayoutWidth,
+			Border = TableBorder.None
+		};
+
+		table.AddColumn(new TableColumn(BuildInstructionsSection()));
+		table.AddEmptyRow();
+		table.AddRow(DisplayDefaultConversions());
+
+		return table;
 	}
 
-	private static string DisplayDefaultConversions()
+	private static Panel CreateCurrentDirectoryPanel()
 	{
-		string conversions = string.Join("\n", DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
-
-		return $@"[grey85 underline]Conversion Formats[/]
-{conversions}";
+		return new Panel($"Current Directory: {Directory.GetCurrentDirectory()}")
+		{
+			Width = LayoutWidth,
+			Border = BoxBorder.None,
+			Padding = new Padding(0)
+		};
 	}
 
-	private static string BuildInstructionsSection()
+	private static Table CreateDirectoryTable(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
 	{
-		return @"[grey85 underline]Drag & Drop[/]
-[lightskyblue1]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
+		var table = new Table
+		{
+			Width = LayoutWidth,
+			Border = TableBorder.None
+		};
 
-[grey85 underline]Folder Conversion[/]
-[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
+		table.AddColumn(new TableColumn(CreateTree("Folders:", directoriesTree)));
+		table.AddColumn(new TableColumn(CreateTree("Image Files:", filesTree)));
+
+		return table;
 	}
 
 	private static IRenderable CreateTree(string header, IEnumerable<string> items)
@@ -126,12 +88,28 @@ path -png  [lightskyblue1]Convert to png[/]
 		return tree;
 	}
 
+	private static string BuildInstructionsSection()
+	{
+		return @"[grey85 underline]Drag & Drop[/]
+[lightskyblue1]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
+
+[grey85 underline]Folder Conversion[/]
+[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
+	}
+
+	private static string DisplayDefaultConversions()
+	{
+		var conversions = string.Join("\n", DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
+
+		return $"[grey85 underline]Conversion Formats[/]\n{conversions}";
+	}
+
 	public static void Write(string output)
 	{
 		AnsiConsole.WriteLine(output);
 	}
 
-	public static void WriteException(string output)
+	public static void WriteAndWait(string output)
 	{
 		AnsiConsole.MarkupLine($"[darkred]{output}[/]");
 		Console.ReadKey();

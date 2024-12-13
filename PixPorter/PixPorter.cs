@@ -19,11 +19,11 @@
 		}
 		catch (CommandException ex)
 		{
-			UI.WriteException($"Command Error: {ex.Message}");
+			UI.WriteAndWait($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			UI.WriteException($"Unexpected Error: {ex.Message}");
+			UI.WriteAndWait($"Unexpected Error: {ex.Message}");
 		}
 	}
 
@@ -33,9 +33,7 @@
 
 		while (true)
 		{
-			UI.RenderUIs(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
-			//UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
-			UI.Write($"Current Directory: {Directory.GetCurrentDirectory()}");
+			UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
 			var input = UI.Read("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
