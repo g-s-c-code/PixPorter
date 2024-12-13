@@ -19,7 +19,6 @@ public class CommandParser
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-
 		if (parts.Contains("-ca"))
 		{
 			string? targetFormat = parts.FirstOrDefault(p =>
