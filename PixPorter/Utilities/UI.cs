@@ -1,7 +1,5 @@
 ﻿using Spectre.Console;
 using Spectre.Console.Rendering;
-using System.Collections.Generic;
-using System.Linq;
 using static Constants;
 
 public static class UI
@@ -21,20 +19,20 @@ public static class UI
 
 	private static Layout CreateMainLayout(IEnumerable<string> directoriesTree, IEnumerable<string> filesTree)
 	{
-		var instructionsTable = CreateInstructionsTable();
+		var infoTable = CreateInfoTable();
 		var currentDirectoryPanel = CreateCurrentDirectoryPanel();
 		var directoryTable = CreateDirectoryTable(directoriesTree, filesTree);
 
 		return new Layout("Root")
 			.SplitColumns(
-				new Layout("Left").Update(instructionsTable),
+				new Layout("Left").Update(infoTable),
 				new Layout("Right")
 					.SplitRows(
 						new Layout("TopRight").Size(3).Update(currentDirectoryPanel),
 						new Layout("BottomRight").Update(directoryTable)));
 	}
 
-	private static Table CreateInstructionsTable()
+	private static Table CreateInfoTable()
 	{
 		var table = new Table
 		{
@@ -43,6 +41,10 @@ public static class UI
 		};
 
 		table.AddColumn(new TableColumn(BuildInstructionsSection()));
+		table.AddEmptyRow();
+		table.AddRow(DisplayCommands());
+		table.AddEmptyRow();
+		table.AddRow(DisplayFlags());
 		table.AddEmptyRow();
 		table.AddRow(DisplayDefaultConversions());
 
@@ -94,13 +96,44 @@ public static class UI
 [lightskyblue1]Drag an image into the app window to auto-fill its path, then press 'Enter' to convert.[/]
 
 [grey85 underline]Folder Conversion[/]
-[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]";
+[lightskyblue1]Navigate to the folder containing your images and type 'convert' to process all images in that folder.[/]
+";
+	}
+
+	private static string DisplayCommands()
+	{
+		var commands = new Dictionary<string, string>
+		{
+			{ "convert", "Convert a single file to a different format." },
+			{ "convert-all", "Convert all files in the current directory to a different format." },
+			{ "cd", "Change the current working directory." },
+			{ "q", "Quit the application." },
+			{ "help", "Display help information." }
+		};
+
+		var formattedCommands = string.Join("\n", commands.Select(c => $"[steelblue]{c.Key}[/]: {c.Value}"));
+		return $"[grey85 underline]Commands[/]\n{formattedCommands}";
+	}
+
+	private static string DisplayFlags()
+	{
+		var flags = new Dictionary<string, string>
+		{
+			{ "-c", "Convert a specific file." },
+			{ "-ca", "Convert all files in a directory." },
+			{ "-png", "Set output format to PNG." },
+			{ "-jpg", "Set output format to JPG." },
+			{ "-jpeg", "Set output format to JPEG." },
+			{ "-webp", "Set output format to WEBP." }
+		};
+
+		var formattedFlags = string.Join("\n", flags.Select(f => $"[steelblue]{f.Key}[/]: {f.Value}"));
+		return $"[grey85 underline]Flags[/]\n{formattedFlags}";
 	}
 
 	private static string DisplayDefaultConversions()
 	{
 		var conversions = string.Join("\n", DefaultConversions.Select(c => $"[steelblue]{c.Key} -> {c.Value}[/]"));
-
 		return $"[grey85 underline]Conversion Formats[/]\n{conversions}";
 	}
 
