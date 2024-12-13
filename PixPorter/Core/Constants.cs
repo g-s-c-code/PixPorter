@@ -11,7 +11,6 @@
 
 	public static class Flags
 	{
-		public const string ConvertFile = "-c";
 		public const string ConvertAll = "-ca";
 		public const string Png = "-png";
 		public const string Jpg = "-jpg";
