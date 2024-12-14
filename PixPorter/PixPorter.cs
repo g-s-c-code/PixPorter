@@ -1,6 +1,4 @@
-﻿using static DirectoryUtility;
-
-public class PixPorter
+﻿public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
 
@@ -18,7 +16,9 @@ public class PixPorter
 
 		while (true)
 		{
-			UI.RenderUI(GetDirectories(), GetImageFiles());
+			UI.RenderUI(DirectoryUtility.GetDirectories(),
+						DirectoryUtility.GetImageFiles());
+
 			var input = UI.Read("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))

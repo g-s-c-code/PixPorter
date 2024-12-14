@@ -2,14 +2,9 @@
 using Spectre.Console;
 using static Constants;
 
-public class CommandService
+public class CommandService(ImageConverter converter)
 {
-	private readonly ImageConverter _converter;
-
-	public CommandService(ImageConverter converter)
-	{
-		_converter = converter;
-	}
+	private readonly ImageConverter _converter = converter;
 
 	public void ExecuteCommand(Command command)
 	{
