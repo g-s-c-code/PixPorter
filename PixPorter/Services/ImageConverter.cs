@@ -1,46 +1,42 @@
 ﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using Spectre.Console;
-using static Constants;
 
 public class ImageConverter
 {
+	private readonly Dictionary<string, IImageEncoder> _encoders = new()
+	{
+		{ Constants.FileFormats.Webp, new WebpEncoder() },
+		{ Constants.FileFormats.Png, new PngEncoder() },
+		{ Constants.FileFormats.Jpg, new JpegEncoder() },
+		{ Constants.FileFormats.Jpeg, new JpegEncoder() }
+	};
+
 	public void ConvertFile(string filePath, string? targetFormat = null)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();
-		string outputFormat = targetFormat ?? DefaultConversions.GetValueOrDefault(extension) ?? throw new Exception($"Unsupported file type: {filePath}");
-
+		string outputFormat = DetermineOutputFormat(extension, targetFormat);
 		string outputPath = Path.ChangeExtension(filePath, outputFormat);
 
-		using var image = Image.Load(filePath);
-		switch (outputFormat)
+		try
 		{
-			case ".webp":
-				image.Save(outputPath, new WebpEncoder());
-				break;
-			case ".png":
-				image.Save(outputPath, new PngEncoder());
-				break;
-			case ".jpg":
-			case ".jpeg":
-				image.Save(outputPath, new JpegEncoder());
-				break;
-			default:
-				throw new Exception($"Unsupported conversion target: {outputFormat}");
+			using var image = Image.Load(filePath);
+			image.Save(outputPath, GetEncoder(outputFormat));
+			AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
 		}
-
-		AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
-		Console.ReadKey();
+		catch (Exception ex)
+		{
+			AnsiConsole.MarkupLine($"[red]Conversion failed: {ex.Message}[/]");
+		}
 	}
 
 	public void ConvertDirectory(string directoryPath, string? targetFormat = null)
 	{
 		var files = Directory.GetFiles(directoryPath)
-			.Where(file =>
-				FileFormats.SupportedFormats.Contains(Path.GetExtension(file).ToLower()) &&
-				(targetFormat == null || DefaultConversions.ContainsKey(Path.GetExtension(file).ToLower())))
+			.Where(file => IsSupported(file, targetFormat))
 			.ToList();
 
 		if (!files.Any())
@@ -49,18 +45,46 @@ public class ImageConverter
 			return;
 		}
 
-		foreach (var file in files)
-		{
-			try
+		AnsiConsole.Progress()
+			.Start(ctx =>
 			{
-				ConvertFile(file, targetFormat);
-			}
-			catch (Exception ex)
-			{
-				AnsiConsole.MarkupLine($"[red]Failed to convert {file}: {ex.Message}[/]");
-			}
-		}
+				var conversionTask = ctx.AddTask("[green]Converting Images[/]", maxValue: files.Count);
+
+				foreach (var file in files)
+				{
+					try
+					{
+						ConvertFile(file, targetFormat);
+						conversionTask.Increment(1);
+					}
+					catch (Exception ex)
+					{
+						AnsiConsole.MarkupLine($"[red]Conversion failed for {file}: {ex.Message}[/]");
+					}
+				}
+			});
 
 		AnsiConsole.MarkupLine("[green]All supported files have been successfully processed![/]");
+	}
+
+	private string DetermineOutputFormat(string inputExtension, string? targetFormat)
+	{
+		return targetFormat ??
+			   Constants.DefaultConversions.GetValueOrDefault(inputExtension) ??
+			   throw new Exception($"Unsupported file type: {inputExtension}");
+	}
+
+	private IImageEncoder GetEncoder(string format)
+	{
+		return _encoders.TryGetValue(format, out var encoder)
+			? encoder
+			: throw new Exception($"Unsupported conversion target: {format}");
+	}
+
+	private bool IsSupported(string filePath, string? targetFormat)
+	{
+		string extension = Path.GetExtension(filePath).ToLower();
+		return Constants.FileFormats.SupportedFormats.Contains(extension) &&
+			   (targetFormat == null || Constants.DefaultConversions.ContainsKey(extension));
 	}
 }

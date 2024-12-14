@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
-using static Constants;
 
 public static class UI
 {
@@ -26,7 +25,7 @@ public static class UI
 		AnsiConsole.Write(BuildHelpTable());
 		AnsiConsole.Prompt(new SelectionPrompt<string>()
 			   .Title("Navigate:")
-			   .AddChoices("Back to Main Menu")); 
+			   .AddChoices("Back to Main Menu"));
 		RenderUI(directories, files);
 	}
 
@@ -73,7 +72,7 @@ public static class UI
 			BuildSection("Commands", new[]
 			{
 				("[rosybrown]cd[/]", "Change the current working directory."),
-				("[rosybrown]q | e[/]", "Exit the application."),
+				("[rosybrown]q[/]", "Exit the application."),
 				("[rosybrown]help[/]", "Display help information.")
 			}),
 			BuildSection("Flags", new[]
@@ -81,10 +80,13 @@ public static class UI
 				("[rosybrown]-ca[/]", "Convert all files in a directory."),
 				("[rosybrown]-png[/]", "Set output format to PNG."),
 				("[rosybrown]-jpg[/]", "Set output format to JPG."),
-				("[rosybrown]-jpeg[/]", "Set output format to JPEG."),
 				("[rosybrown]-webp[/]", "Set output format to WEBP.")
 			}),
-			BuildSection("Default Conversion Formats", DefaultConversions.Select(c => ($"", $"{c.Key} -> {c.Value}")).ToArray())
+			BuildSection("Default Conversion Formats",
+				Constants.DefaultConversions
+					.Where(c => c.Key != Constants.FileFormats.Jpeg)
+					.Select(c => ($"", $"{c.Key} -> {c.Value}"))
+					.ToArray())
 		};
 
 		foreach (var section in sections)
@@ -193,7 +195,7 @@ public static class UI
 					"[[-jpeg]]: Convert to JPEG",
 					"[[-webp]]: Convert to WebP"
 				}),
-				("Default Conversion Formats", DefaultConversions.Select(c => $"{c.Key} -> {c.Value}").ToArray()),
+				("Default Conversion Formats", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}").ToArray()),
 				("Tips", new[]
 				{
 					"Drag and drop images into the window",
