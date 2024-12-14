@@ -1,30 +1,15 @@
-﻿public class PixPorter
+﻿using static DirectoryUtility;
+
+public class PixPorter
 {
-	private readonly CommandParser _commandParser;
-	private readonly CommandService _commandExecutor;
+	private readonly CommandProcessor _commandProcessor;
 
 	public PixPorter()
 	{
-		var converter = new ImageConverter();
-		_commandParser = new CommandParser();
-		_commandExecutor = new CommandService(converter);
-	}
-
-	public void ProcessCommand(string input)
-	{
-		try
-		{
-			var command = _commandParser.Parse(input.ToLower());
-			_commandExecutor.ExecuteCommand(command);
-		}
-		catch (CommandException ex)
-		{
-			UI.WriteAndWait($"Command Error: {ex.Message}");
-		}
-		catch (Exception ex)
-		{
-			UI.WriteAndWait($"Unexpected Error: {ex.Message}");
-		}
+		var imageConverter = new ImageConverter();
+		var commandParser = new CommandParser();
+		var commandService = new CommandService(imageConverter);
+		_commandProcessor = new CommandProcessor(commandParser, commandService);
 	}
 
 	public void Run()
@@ -33,13 +18,13 @@
 
 		while (true)
 		{
-			UI.RenderUI(DirectoryReader.GetDirectories(), DirectoryReader.GetImageFiles());
+			UI.RenderUI(GetDirectories(), GetImageFiles());
 			var input = UI.Read("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;
 
-			ProcessCommand(input);
+			_commandProcessor.ProcessCommand(input);
 		}
 	}
 }

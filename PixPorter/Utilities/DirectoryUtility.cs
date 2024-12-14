@@ -1,6 +1,6 @@
 ﻿using static Constants;
 
-public static class DirectoryReader
+public static class DirectoryUtility
 {
 	public static IEnumerable<string> GetEntries(Func<string, bool> filter, string errorType)
 	{

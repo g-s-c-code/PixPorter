@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using System.Text;
+using Spectre.Console;
 using static Constants;
 
 public class CommandService
@@ -14,8 +15,11 @@ public class CommandService
 	{
 		switch (command.Name.ToLower())
 		{
-			case Commands.Quit:
+			case Commands.Exit:
 				Environment.Exit(0);
+				break;
+			case Commands.Help:
+				UI.RenderHelpUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles());
 				break;
 			case Commands.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
@@ -27,7 +31,7 @@ public class CommandService
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.Write("[red]Unknown command.[/]");
+				UI.Write("[rosybrown]Unknown command.[/]");
 				break;
 		}
 	}
@@ -36,7 +40,7 @@ public class CommandService
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			AnsiConsole.WriteLine("Path cannot be empty. Usage: cd [path]");
+			AnsiConsole.WriteLine("Path cannot be empty. Usage: cd [[path]]");
 			return;
 		}
 

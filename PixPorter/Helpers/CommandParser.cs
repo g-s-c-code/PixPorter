@@ -2,13 +2,16 @@
 
 public class CommandParser
 {
-	private readonly string[] _supportedFileExtensions = { ".png", ".jpg", ".jpeg", ".webp" };
-
 	public Command Parse(string input)
-	{
-		if (input == "q" || input == "quit")
+	{		
+		if (input == "exit" || input == "q" || input == "quit")
 		{
-			return new Command(Commands.Quit, Array.Empty<string>());
+			return new Command(Commands.Exit, []);
+		}
+
+		if (input == "help")
+		{
+			return new Command(Commands.Help, []);
 		}
 
 		if (input.StartsWith("cd "))

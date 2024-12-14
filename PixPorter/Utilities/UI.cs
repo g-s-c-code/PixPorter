@@ -5,24 +5,34 @@ using static Constants;
 
 public static class UI
 {
-	private const int LayoutWidth = 100;
+	private const int LayoutWidth = 150;
 
-	public static void RenderUI(IEnumerable<string> directoryTree, IEnumerable<string> fileTree)
+	public static void RenderUI(IEnumerable<string> directories, IEnumerable<string> files)
 	{
-		var infoTable = CreateInformationTable();
-		var currentDirectoryPanel = CreateCurrentDirectoryPanel();
-		var directoryTable = CreateDirectoryContentTable(directoryTree, fileTree);
+		var informationTable = BuildInformationTable();
+		var currentDirectoryPanel = BuildCurrentDirectoryPanel();
+		var directoryContentTable = BuildDirectoryContentTable(directories, files);
 
-		var rightColumnPanel = CreateRightColumnPanel(currentDirectoryPanel, directoryTable);
-		var layoutTable = CreateLayoutTable(infoTable, rightColumnPanel);
+		var rightPanel = BuildRightPanel(currentDirectoryPanel, directoryContentTable);
+		var layoutTable = BuildLayoutTable(informationTable, rightPanel);
 
 		AnsiConsole.Clear();
 		AnsiConsole.Write(layoutTable);
 	}
 
-	private static Panel CreateRightColumnPanel(Panel currentDirectoryPanel, Table directoryTable)
+	public static void RenderHelpUI(IEnumerable<string> directories, IEnumerable<string> files)
 	{
-		return new Panel(new Rows([currentDirectoryPanel, directoryTable]))
+		AnsiConsole.Clear();
+		AnsiConsole.Write(BuildHelpTable());
+		AnsiConsole.Prompt(new SelectionPrompt<string>()
+			   .Title("Navigate:")
+			   .AddChoices("Back to Main Menu")); 
+		RenderUI(directories, files);
+	}
+
+	private static Panel BuildRightPanel(Panel directoryPanel, Table contentTable)
+	{
+		return new Panel(new Rows([directoryPanel, contentTable]))
 		{
 			BorderStyle = Color.LightSkyBlue1,
 			Header = new PanelHeader("Current Directory".ToUpper()),
@@ -30,18 +40,20 @@ public static class UI
 		};
 	}
 
-	private static Table CreateLayoutTable(Table infoTable, Panel rightColumnPanel)
+	private static Table BuildLayoutTable(Table informationTable, Panel rightPanel)
 	{
-		var layoutTable = new Table();
-		layoutTable.AddColumn(new TableColumn(infoTable));
-		layoutTable.AddColumn(new TableColumn(rightColumnPanel));
-		layoutTable.Columns[0].Padding = new Padding(0);
-		layoutTable.Columns[1].Padding = new Padding(0);
-		layoutTable.Border = TableBorder.Horizontal;
+		var layoutTable = new Table
+		{
+			Border = TableBorder.Horizontal
+		};
+
+		layoutTable.AddColumn(new TableColumn(informationTable) { Padding = new Padding(0) });
+		layoutTable.AddColumn(new TableColumn(rightPanel) { Padding = new Padding(0) });
+
 		return layoutTable;
 	}
 
-	private static Table CreateInformationTable()
+	private static Table BuildInformationTable()
 	{
 		var table = new Table
 		{
@@ -49,32 +61,31 @@ public static class UI
 			Width = LayoutWidth
 		};
 
-		table.AddColumn(new TableColumn("")).HideHeaders();
+		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
 
 		var sections = new[]
 		{
-		CreateSection("Usage Instructions".ToUpper(), new[]
-		{
-			("Drag & Drop", "Drag an image into the window, then press 'Enter' to convert it."),
-			("Folder Navigation", "Use 'cd [[path]]' to navigate to a folder, then use flag '-ca' to convert all files.")
-		}),
-		CreateSection("Commands".ToUpper(), new[]
-		{
-			("cd", "Change the current working directory."),
-			("q", "Quit the application."),
-			("help", "Display help information.")
-		}),
-		CreateSection("Flags".ToUpper(), new[]
-		{
-			("-ca", "Convert all files in a directory."),
-			("-png", "Set output format to PNG."),
-			("-jpg", "Set output format to JPG."),
-			("-jpeg", "Set output format to JPEG."),
-			("-webp", "Set output format to WEBP.")
-		}),
-		CreateSection("Default Conversion Formats".ToUpper(),
-			DefaultConversions.Select(c => (c.Key, $"{c.Key} -> {c.Value}")).ToArray())
-	};
+			BuildSection("Usage Instructions", new[]
+			{
+				("[rosybrown]Drag & Drop[/]", "Drag an image into the window, then press 'Enter' to convert it."),
+				("[rosybrown]Folder Navigation[/]", "Use 'cd [[path]]' to navigate to a folder, then use flag '-ca' to convert all image files in that folder.")
+			}),
+			BuildSection("Commands", new[]
+			{
+				("[rosybrown]cd[/]", "Change the current working directory."),
+				("[rosybrown]q | e[/]", "Exit the application."),
+				("[rosybrown]help[/]", "Display help information.")
+			}),
+			BuildSection("Flags", new[]
+			{
+				("[rosybrown]-ca[/]", "Convert all files in a directory."),
+				("[rosybrown]-png[/]", "Set output format to PNG."),
+				("[rosybrown]-jpg[/]", "Set output format to JPG."),
+				("[rosybrown]-jpeg[/]", "Set output format to JPEG."),
+				("[rosybrown]-webp[/]", "Set output format to WEBP.")
+			}),
+			BuildSection("Default Conversion Formats", DefaultConversions.Select(c => ($"", $"{c.Key} -> {c.Value}")).ToArray())
+		};
 
 		foreach (var section in sections)
 		{
@@ -84,24 +95,21 @@ public static class UI
 		return table;
 	}
 
-	private static IRenderable CreateSection(string header, (string Key, string Description)[] items)
+	private static IRenderable BuildSection(string title, (string Key, string Value)[] items)
 	{
-		var sectionContent = new StringBuilder();
-		sectionContent.AppendLine($"[lightskyblue1 bold]{header}[/]");
+		var sectionContent = new StringBuilder().AppendLine($"[lightskyblue1 bold]{title.ToUpper()}[/]");
 
-		foreach (var (key, description) in items)
+		foreach (var (key, value) in items)
 		{
-			sectionContent.AppendLine($"[grey85]{key}[/]: {description}");
+			sectionContent.AppendLine($"[grey85]{key}[/]: {value}");
 		}
 
 		return new Markup(sectionContent.ToString());
 	}
 
-	private static Panel CreateCurrentDirectoryPanel()
+	private static Panel BuildCurrentDirectoryPanel()
 	{
-		var currentDirectory = new TextPath(Directory.GetCurrentDirectory());
-
-		return new Panel(currentDirectory)
+		return new Panel(new TextPath(Directory.GetCurrentDirectory()))
 		{
 			Border = BoxBorder.None,
 			Padding = new Padding(2, 1),
@@ -109,7 +117,7 @@ public static class UI
 		};
 	}
 
-	private static Table CreateDirectoryContentTable(IEnumerable<string> directoryTree, IEnumerable<string> fileTree)
+	private static Table BuildDirectoryContentTable(IEnumerable<string> directories, IEnumerable<string> files)
 	{
 		var table = new Table
 		{
@@ -117,23 +125,20 @@ public static class UI
 			Width = LayoutWidth
 		};
 
-		table.AddColumn(new TableColumn(CreateDirectoryTree("Folders:", directoryTree)));
-		table.AddColumn(new TableColumn(CreateDirectoryTree("Image Files:", fileTree)));
-		table.Columns[0].PadBottom(0);
-		table.Columns[1].PadBottom(0);
+		table.AddColumn(new TableColumn(BuildTree("Folders:", directories)));
+		table.AddColumn(new TableColumn(BuildTree("Image Files:", files)));
 
 		return table;
 	}
-	private static IRenderable CreateDirectoryTree(string header, IEnumerable<string> items)
+
+	private static IRenderable BuildTree(string header, IEnumerable<string> items)
 	{
 		var tree = new Tree(header)
 		{
 			Style = new Style(foreground: Color.RosyBrown)
 		};
 
-		foreach (var node in !items.Any()
-			? new[] { "[dim italic]None[/]" }
-			: items.Select(item => $"[bold white]{item}[/]"))
+		foreach (var node in items.DefaultIfEmpty("[dim italic]None[/]").Select(item => $"[bold white]{item}[/]"))
 		{
 			tree.AddNode(node);
 		}
@@ -141,19 +146,87 @@ public static class UI
 		return tree;
 	}
 
-	public static void Write(string output)
+	public static void Write(string message)
 	{
-		AnsiConsole.WriteLine(output);
+		AnsiConsole.WriteLine(message);
 	}
 
-	public static void WriteAndWait(string output)
+	public static void WriteAndWait(string message)
 	{
-		AnsiConsole.MarkupLine($"[rosybrown]{output}[/]");
+		AnsiConsole.MarkupLine($"[rosybrown]{message}[/]");
 		Console.ReadKey();
 	}
 
 	public static string Read(string prompt)
 	{
 		return AnsiConsole.Ask<string>(prompt);
+	}
+
+	public static class HelpContent
+	{
+		public static List<(string Title, string[] Details)> GetHelpSections()
+		{
+			return new List<(string, string[])>
+			{
+				("Overview", new[]
+				{
+					"PixPorter is a versatile image format conversion tool",
+					"Convert images between PNG, JPG, JPEG, and WebP formats with ease"
+				}),
+				("Basic Commands", new[]
+				{
+					"'cd [[path]]': Change the current working directory",
+					"'q': Exit the application",
+					"'help': Display help information"
+				}),
+				("Conversion Commands", new[]
+				{
+					"Single File: Enter a valid image file path, followed by an optional format flag",
+					"  Example: C:/path/to/image/image.png -webp",
+					"Convert All Files: Enter a valid folder path containing one or more images, followed by an optional format flag",
+					"  Example: C:/path/to/folder/containing/images -webp"
+				}),
+				("Supported Format Flags", new[]
+				{
+					"[[-png]]: Convert to PNG",
+					"[[-jpg]]: Convert to JPG",
+					"[[-jpeg]]: Convert to JPEG",
+					"[[-webp]]: Convert to WebP"
+				}),
+				("Default Conversion Formats", DefaultConversions.Select(c => $"{c.Key} -> {c.Value}").ToArray()),
+				("Tips", new[]
+				{
+					"Drag and drop images into the window",
+					"Use full or relative paths",
+					"Original images are preserved during conversion"
+				})
+			};
+		}
+	}
+
+	private static Table BuildHelpTable()
+	{
+		var helpTable = new Table
+		{
+			Border = TableBorder.Horizontal,
+			Width = LayoutWidth,
+			Title = new TableTitle("PixPorter - Help Section".ToUpper())
+		};
+
+		helpTable.AddColumn(new TableColumn(string.Empty)).HideHeaders();
+
+		foreach (var (title, details) in HelpContent.GetHelpSections())
+		{
+			helpTable.AddRow($"[bold yellow]{title}[/]");
+
+			foreach (var detail in details)
+			{
+				helpTable.AddRow($"[white]{detail}[/]");
+			}
+
+			helpTable.AddRow(string.Empty);
+		}
+
+		return helpTable;
 	}
 }
