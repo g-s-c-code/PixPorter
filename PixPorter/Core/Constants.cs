@@ -5,7 +5,7 @@
 		public const string ConvertFile = "convert";
 		public const string ConvertAll = "convert-all";
 		public const string ChangeDirectory = "cd";
-		public const string Exit = "e";
+		public const string Exit = "q";
 		public const string Help = "help";
 	}
 

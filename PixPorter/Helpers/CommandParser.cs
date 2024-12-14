@@ -1,23 +1,21 @@
-﻿using static Constants;
-
-public class CommandParser
+﻿public class CommandParser
 {
 	public Command Parse(string input)
-	{		
+	{
 		if (input == "exit" || input == "q" || input == "quit")
 		{
-			return new Command(Commands.Exit, []);
+			return new Command(Constants.Commands.Exit, []);
 		}
 
 		if (input == "help")
 		{
-			return new Command(Commands.Help, []);
+			return new Command(Constants.Commands.Help, []);
 		}
 
 		if (input.StartsWith("cd "))
 		{
 			string path = input.Substring(3).Trim();
-			return new Command(Commands.ChangeDirectory, [path]);
+			return new Command(Constants.Commands.ChangeDirectory, [path]);
 		}
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -28,7 +26,7 @@ public class CommandParser
 			string? targetFormat = parts.FirstOrDefault(p =>
 				p == "-png" || p == "-jpg" || p == "-jpeg" || p == "-webp");
 
-			return new Command(Commands.ConvertAll,
+			return new Command(Constants.Commands.ConvertAll,
 				Array.Empty<string>(),
 				MapFormatFlag(targetFormat));
 		}
@@ -57,7 +55,7 @@ public class CommandParser
 		// Single file conversion
 		if (resolvedFilePath != null)
 		{
-			return new Command(Commands.ConvertFile,
+			return new Command(Constants.Commands.ConvertFile,
 				[resolvedFilePath],
 				MapFormatFlag(formatFlag));
 		}
@@ -65,14 +63,14 @@ public class CommandParser
 		throw new CommandException("Invalid command or path.");
 	}
 
-	private string? MapFormatFlag(string? flag)
+	private static string? MapFormatFlag(string? flag)
 	{
 		return flag switch
 		{
-			"-png" => ".png",
-			"-jpg" => ".jpg",
-			"-jpeg" => ".jpeg",
-			"-webp" => ".webp",
+			Constants.Flags.Png => Constants.FileFormats.Png,
+			Constants.Flags.Jpg => Constants.FileFormats.Jpg,
+			Constants.Flags.Jpeg => Constants.FileFormats.Jpeg,
+			Constants.Flags.Webp => Constants.FileFormats.Webp,
 			_ => null
 		};
 	}

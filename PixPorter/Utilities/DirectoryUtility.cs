@@ -1,6 +1,4 @@
-﻿using static Constants;
-
-public static class DirectoryUtility
+﻿public static class DirectoryUtility
 {
 	public static IEnumerable<string> GetEntries(Func<string, bool> filter, string errorType)
 	{
@@ -35,7 +33,7 @@ public static class DirectoryUtility
 
 	public static IEnumerable<string> GetImageFiles()
 	{
-		return GetEntries(file => FileFormats.SupportedFormats.Contains(Path.GetExtension(file),
+		return GetEntries(file => Constants.FileFormats.SupportedFormats.Contains(Path.GetExtension(file),
 			StringComparer.OrdinalIgnoreCase),
 			"File");
 	}

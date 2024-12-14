@@ -1,5 +1,4 @@
-﻿
-public class CommandProcessor(CommandParser commandParser, CommandService commandService)
+﻿public class CommandProcessor(CommandParser commandParser, CommandService commandService)
 {
 	private readonly CommandParser _commandParser = commandParser;
 	private readonly CommandService _commandExecutor = commandService;

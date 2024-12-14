@@ -1,13 +1,6 @@
-﻿public class Command
+﻿public record Command(string Name, List<string> Arguments, string? TargetFormat)
 {
-    public string Name { get; }
-    public List<string> Arguments { get; }
-    public string? TargetFormat { get; }
-
-    public Command(string name, IEnumerable<string> arguments, string? targetFormat = null)
-    {
-        Name = name;
-        Arguments = new List<string>(arguments);
-        TargetFormat = targetFormat;
-    }
+	public Command(string name, IEnumerable<string> arguments, string? targetFormat = null) : this(name, new List<string>(arguments), targetFormat)
+	{
+	}
 }
