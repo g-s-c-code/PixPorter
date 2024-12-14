@@ -35,7 +35,7 @@ public static class UI
 		{
 			BorderStyle = Color.LightSkyBlue1,
 			Header = new PanelHeader("Current Directory".ToUpper()),
-			Padding = new Padding(1, 1, 1, 0),
+			Padding = new Padding(0, 1, 0, 0),
 		};
 	}
 
@@ -46,8 +46,8 @@ public static class UI
 			Border = TableBorder.Horizontal
 		};
 
-		layoutTable.AddColumn(new TableColumn(informationTable) { Padding = new Padding(0) });
-		layoutTable.AddColumn(new TableColumn(rightPanel) { Padding = new Padding(0) });
+		layoutTable.AddColumn(new TableColumn(informationTable).Padding(0, 0));
+		layoutTable.AddColumn(new TableColumn(rightPanel).Padding(0, 0));
 
 		return layoutTable;
 	}
@@ -61,6 +61,7 @@ public static class UI
 		};
 
 		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
+		table.Columns[0].Padding(0, 0, 0, 0);
 
 		var sections = new[]
 		{
@@ -111,10 +112,15 @@ public static class UI
 
 	private static Panel BuildCurrentDirectoryPanel()
 	{
-		return new Panel(new TextPath(Directory.GetCurrentDirectory()))
+		var currentDirectory = new TextPath(Directory.GetCurrentDirectory().ToUpper())
+			.RootColor(Color.Red)
+			.SeparatorColor(Color.Green)
+			.StemColor(Color.Blue)
+			.LeafColor(Color.Yellow);
+
+		return new Panel(currentDirectory)
 		{
 			Border = BoxBorder.None,
-			Padding = new Padding(2, 1),
 			Width = LayoutWidth
 		};
 	}
@@ -127,8 +133,10 @@ public static class UI
 			Width = LayoutWidth
 		};
 
-		table.AddColumn(new TableColumn(BuildTree("Folders:", directories)));
-		table.AddColumn(new TableColumn(BuildTree("Image Files:", files)));
+		table.AddColumn(new TableColumn(BuildTree("Folders:".ToUpper(), directories)));
+		table.AddColumn(new TableColumn(BuildTree("Image Files:".ToUpper(), files)));
+		table.Columns[0].Padding(0, 0);
+		table.Columns[1].Padding(0, 0);
 
 		return table;
 	}
