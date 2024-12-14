@@ -38,4 +38,19 @@
 		{ FileFormats.Jpeg, FileFormats.Webp },
 		{ FileFormats.Webp, FileFormats.Png }
 	};
+
+	public static class CompressionDefaults
+	{
+		public const int PngQuality = 100;
+		public const int JpgQuality = 85;
+		public const int WebpQuality = 80;
+
+		public static readonly Dictionary<string, int> FormatQualityDefaults = new()
+		{
+			{ FileFormats.Png, PngQuality },
+			{ FileFormats.Jpg, JpgQuality },
+			{ FileFormats.Jpeg, JpgQuality },
+			{ FileFormats.Webp, WebpQuality }
+		};
+	}
 }

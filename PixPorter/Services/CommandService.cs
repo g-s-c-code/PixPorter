@@ -15,7 +15,7 @@ public class CommandService(ImageConverter converter)
 				break;
 			case Commands.Help:
 				UI.RenderUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles(), true);
-				UI.WriteAndWait("Press any key to return.");
+				UI.WriteAndWait("Press any key to return...", Color.SteelBlue);
 				break;
 			case Commands.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");

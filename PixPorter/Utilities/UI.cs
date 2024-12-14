@@ -20,7 +20,8 @@ public static class UI
 	{
 		var layoutTable = new Table
 		{
-			Border = TableBorder.Horizontal
+			Border = TableBorder.Horizontal,
+			Title = new TableTitle("PixPorter - Image Converter and Compressor")
 		};
 
 		layoutTable.AddColumn(new TableColumn(leftPanel).Padding(0, 0));
@@ -55,7 +56,7 @@ public static class UI
 			BuildSection("Usage Instructions", new[]
 			{
 				("[rosybrown]Drag & Drop[/]", "Drag an image into the window, then press 'Enter' to convert it."),
-				("[rosybrown]Folder Navigation[/]", "Use 'cd [[path]]' to navigate to a folder, then use flag '-ca' to convert all image files in that folder.")
+				("[rosybrown]Folder Navigation[/]", "Use 'cd [[path]]' to navigate to a folder, then use the '-ca' flag to convert [underline]all[/] image files in that folder, or simply write the name of image you wish to convert.")
 			}),
 			BuildSection("Commands", new[]
 			{
@@ -148,9 +149,11 @@ public static class UI
 		AnsiConsole.WriteLine(message);
 	}
 
-	public static void WriteAndWait(string message)
+	public static void WriteAndWait(string message, Color? color = null)
 	{
-		AnsiConsole.MarkupLine($"[rosybrown]{message}[/]");
+		var styledMessage = new Markup(message, color ?? Color.RosyBrown);
+
+		AnsiConsole.Write(styledMessage);
 		Console.ReadKey();
 	}
 
@@ -171,40 +174,43 @@ public static class UI
 		" - Convert images between PNG, JPG, JPEG, and WebP formats.",
 		" - Compress images to save space while preserving quality.",
 		"",
-		"Quick Start:",
+		"[yellow underline bold]Quick Start[/]".ToUpper(),
 		"1. To convert a single image, enter the file path and specify the format you want (e.g., 'C:/path/image.png -webp').",
 		"2. To convert all images in a folder, enter the folder path followed by the format (e.g., 'C:/path/to/folder -jpg').",
 		"3. You can drag and drop image files or folders into the PixPorter window for instant processing.",
 		"",
-		"What are 'flags' and how do they work?",
+		"[yellow underline bold]What are 'flags' and how do they work?[/]".ToUpper(),
 		" - A flag is a way to customize the conversion. Simply add the desired flag after your file or folder path.",
 		" - For example: '-png' converts to PNG format, and '-webp' converts to WebP format.",
 		"",
-		"Supported Format Flags:",
+		"[yellow underline bold]Supported Format Flags:[/]",
 		" - '-png'   : Convert to PNG format.",
 		" - '-jpg'   : Convert to JPG format.",
 		" - '-jpeg'  : Convert to JPEG format.",
 		" - '-webp'  : Convert to WebP format.",
 		"",
-		"Default Behaviors:",
-		" - PixPorter automatically applies default format conversions: ",
+		"[yellow underline bold]Default Behaviors:[/]",
+		" - PixPorter automatically applies default format conversions dependent on the input format: ",
 		$"   {string.Join(", ", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}"))}.",
 		" - Your original images are always preserved, so you don’t have to worry about overwriting files.",
 		"",
-		"Additional Features:",
+		"[yellow underline bold]Additional Features:[/]",
 		" - Supports both full paths (e.g., 'C:/images/photo.png') and relative paths (e.g., './photo.png').",
 		" - Exit the app anytime by typing 'q'.",
 		" - Need this guide again? Just type 'help'.",
 		"",
-		"Examples:",
+		"[yellow underline bold]Examples:[/]",
 		" - To convert an image to WebP: 'C:/images/photo.png -webp'",
 		" - To compress all images in a folder and convert to JPG: 'C:/images -jpg'",
 		"",
-		"Tips for Beginners:",
+		"[yellow underline bold]Tips for Beginners:[/]",
 		" - Use the 'cd [[path]]' command to change the working directory if needed.",
 		" - Drag and drop files or folders into the app to make processing even easier!",
 		"",
-		"Thank you for using PixPorter!"
+		"Thank you for using PixPorter!",
+		"",
+		"Suppport the project by starring it on GitHub: [steelblue bold][link]https://github.com/g-s-c-code/PixPorter[/][/]",
+
 	};
 		}
 	}
@@ -214,7 +220,7 @@ public static class UI
 		{
 			Border = TableBorder.Horizontal,
 			Width = LayoutWidth,
-			Title = new TableTitle("PixPorter - Help Section".ToUpper())
+			Title = new TableTitle("PixPorter - Help Section")
 		};
 
 		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
