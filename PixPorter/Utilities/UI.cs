@@ -6,53 +6,40 @@ public static class UI
 {
 	private const int LayoutWidth = 150;
 
-	public static void RenderUI(IEnumerable<string> directories, IEnumerable<string> files)
+	public static void RenderUI(IEnumerable<string> directories, IEnumerable<string> files, bool displayHelp = false)
 	{
-		var informationTable = BuildInformationTable();
-		var currentDirectoryPanel = BuildCurrentDirectoryPanel();
-		var directoryContentTable = BuildDirectoryContentTable(directories, files);
-
-		var rightPanel = BuildRightPanel(currentDirectoryPanel, directoryContentTable);
-		var layoutTable = BuildLayoutTable(informationTable, rightPanel);
+		var leftPanel = InformationContentUI();
+		var rightPanel = DirectoryContentUI(CurrentDirectoryPathUI(), CurrentDirectoryContentUI(directories, files));
+		var pixPorterUI = displayHelp ? HelpContentUI() : PixPorterUI(leftPanel, rightPanel);
 
 		AnsiConsole.Clear();
-		AnsiConsole.Write(layoutTable);
+		AnsiConsole.Write(pixPorterUI);
 	}
 
-	public static void RenderHelpUI(IEnumerable<string> directories, IEnumerable<string> files)
-	{
-		AnsiConsole.Clear();
-		AnsiConsole.Write(BuildHelpTable());
-		AnsiConsole.Prompt(new SelectionPrompt<string>()
-			   .Title("Navigate:")
-			   .AddChoices("Back to Main Menu"));
-		RenderUI(directories, files);
-	}
-
-	private static Panel BuildRightPanel(Panel directoryPanel, Table contentTable)
-	{
-		return new Panel(new Rows([directoryPanel, contentTable]))
-		{
-			BorderStyle = Color.LightSkyBlue1,
-			Header = new PanelHeader("Current Directory".ToUpper()),
-			Padding = new Padding(0, 1, 0, 0),
-		};
-	}
-
-	private static Table BuildLayoutTable(Table informationTable, Panel rightPanel)
+	private static Table PixPorterUI(Table leftPanel, Panel rightPanel)
 	{
 		var layoutTable = new Table
 		{
 			Border = TableBorder.Horizontal
 		};
 
-		layoutTable.AddColumn(new TableColumn(informationTable).Padding(0, 0));
+		layoutTable.AddColumn(new TableColumn(leftPanel).Padding(0, 0));
 		layoutTable.AddColumn(new TableColumn(rightPanel).Padding(0, 0));
 
 		return layoutTable;
 	}
 
-	private static Table BuildInformationTable()
+	private static Panel DirectoryContentUI(Panel currentDirectoryPathUI, Table currentDirectoryContentUI)
+	{
+		return new Panel(new Rows([currentDirectoryPathUI, currentDirectoryContentUI]))
+		{
+			BorderStyle = Color.LightSkyBlue1,
+			Header = new PanelHeader("[[ Current Directory ]]".ToUpper()),
+			Padding = new Padding(0, 1, 0, 0),
+		};
+	}
+
+	private static Table InformationContentUI()
 	{
 		var table = new Table
 		{
@@ -100,7 +87,7 @@ public static class UI
 
 	private static IRenderable BuildSection(string title, (string Key, string Value)[] items)
 	{
-		var sectionContent = new StringBuilder().AppendLine($"[lightskyblue1 bold]{title.ToUpper()}[/]");
+		var sectionContent = new StringBuilder().AppendLine($"[lightskyblue1 underline bold]{title.ToUpper()}[/]");
 
 		foreach (var (key, value) in items)
 		{
@@ -110,7 +97,7 @@ public static class UI
 		return new Markup(sectionContent.ToString());
 	}
 
-	private static Panel BuildCurrentDirectoryPanel()
+	private static Panel CurrentDirectoryPathUI()
 	{
 		var currentDirectory = new TextPath(Directory.GetCurrentDirectory().ToUpper())
 			.RootColor(Color.White)
@@ -125,11 +112,11 @@ public static class UI
 		};
 	}
 
-	private static Table BuildDirectoryContentTable(IEnumerable<string> directories, IEnumerable<string> files)
+	private static Table CurrentDirectoryContentUI(IEnumerable<string> directories, IEnumerable<string> files)
 	{
 		var table = new Table
 		{
-			Border = TableBorder.Minimal,
+			Border = TableBorder.Simple,
 			Width = LayoutWidth
 		};
 
@@ -174,69 +161,69 @@ public static class UI
 
 	public static class HelpContent
 	{
-		public static List<(string Title, string[] Details)> GetHelpSections()
+		public static List<string> GetHelpDetails()
 		{
-			return new List<(string, string[])>
-			{
-				("Overview", new[]
-				{
-					"PixPorter is a versatile image format conversion tool",
-					"Convert images between PNG, JPG, JPEG, and WebP formats with ease"
-				}),
-				("Basic Commands", new[]
-				{
-					"'cd [[path]]': Change the current working directory",
-					"'q': Exit the application",
-					"'help': Display help information"
-				}),
-				("Conversion Commands", new[]
-				{
-					"Single File: Enter a valid image file path, followed by an optional format flag",
-					"  Example: C:/path/to/image/image.png -webp",
-					"Convert All Files: Enter a valid folder path containing one or more images, followed by an optional format flag",
-					"  Example: C:/path/to/folder/containing/images -webp"
-				}),
-				("Supported Format Flags", new[]
-				{
-					"[[-png]]: Convert to PNG",
-					"[[-jpg]]: Convert to JPG",
-					"[[-jpeg]]: Convert to JPEG",
-					"[[-webp]]: Convert to WebP"
-				}),
-				("Default Conversion Formats", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}").ToArray()),
-				("Tips", new[]
-				{
-					"Drag and drop images into the window",
-					"Use full or relative paths",
-					"Original images are preserved during conversion"
-				})
-			};
+			return new List<string>
+	{
+		"Welcome to PixPorter, a simple yet powerful tool for converting and compressing image files!",
+		"",
+		"Here’s what PixPorter can do for you:",
+		" - Convert images between PNG, JPG, JPEG, and WebP formats.",
+		" - Compress images to save space while preserving quality.",
+		"",
+		"Quick Start:",
+		"1. To convert a single image, enter the file path and specify the format you want (e.g., 'C:/path/image.png -webp').",
+		"2. To convert all images in a folder, enter the folder path followed by the format (e.g., 'C:/path/to/folder -jpg').",
+		"3. You can drag and drop image files or folders into the PixPorter window for instant processing.",
+		"",
+		"What are 'flags' and how do they work?",
+		" - A flag is a way to customize the conversion. Simply add the desired flag after your file or folder path.",
+		" - For example: '-png' converts to PNG format, and '-webp' converts to WebP format.",
+		"",
+		"Supported Format Flags:",
+		" - '-png'   : Convert to PNG format.",
+		" - '-jpg'   : Convert to JPG format.",
+		" - '-jpeg'  : Convert to JPEG format.",
+		" - '-webp'  : Convert to WebP format.",
+		"",
+		"Default Behaviors:",
+		" - PixPorter automatically applies default format conversions: ",
+		$"   {string.Join(", ", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}"))}.",
+		" - Your original images are always preserved, so you don’t have to worry about overwriting files.",
+		"",
+		"Additional Features:",
+		" - Supports both full paths (e.g., 'C:/images/photo.png') and relative paths (e.g., './photo.png').",
+		" - Exit the app anytime by typing 'q'.",
+		" - Need this guide again? Just type 'help'.",
+		"",
+		"Examples:",
+		" - To convert an image to WebP: 'C:/images/photo.png -webp'",
+		" - To compress all images in a folder and convert to JPG: 'C:/images -jpg'",
+		"",
+		"Tips for Beginners:",
+		" - Use the 'cd [[path]]' command to change the working directory if needed.",
+		" - Drag and drop files or folders into the app to make processing even easier!",
+		"",
+		"Thank you for using PixPorter!"
+	};
 		}
 	}
-
-	private static Table BuildHelpTable()
+	private static Table HelpContentUI()
 	{
-		var helpTable = new Table
+		var table = new Table
 		{
 			Border = TableBorder.Horizontal,
 			Width = LayoutWidth,
 			Title = new TableTitle("PixPorter - Help Section".ToUpper())
 		};
 
-		helpTable.AddColumn(new TableColumn(string.Empty)).HideHeaders();
+		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
 
-		foreach (var (title, details) in HelpContent.GetHelpSections())
+		foreach (var detail in HelpContent.GetHelpDetails())
 		{
-			helpTable.AddRow($"[bold yellow]{title}[/]");
-
-			foreach (var detail in details)
-			{
-				helpTable.AddRow($"[white]{detail}[/]");
-			}
-
-			helpTable.AddRow(string.Empty);
+			table.AddRow($"[white]{detail}[/]");
 		}
 
-		return helpTable;
+		return table;
 	}
 }
