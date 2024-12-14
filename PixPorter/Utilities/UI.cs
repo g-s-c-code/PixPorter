@@ -113,10 +113,10 @@ public static class UI
 	private static Panel BuildCurrentDirectoryPanel()
 	{
 		var currentDirectory = new TextPath(Directory.GetCurrentDirectory().ToUpper())
-			.RootColor(Color.Red)
-			.SeparatorColor(Color.Green)
-			.StemColor(Color.Blue)
-			.LeafColor(Color.Yellow);
+			.RootColor(Color.White)
+			.SeparatorColor(Color.RosyBrown)
+			.StemColor(Color.White)
+			.LeafColor(Color.LightSkyBlue1);
 
 		return new Panel(currentDirectory)
 		{
