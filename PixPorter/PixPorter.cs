@@ -14,7 +14,7 @@
 	{
 		try
 		{
-			var command = _commandParser.Parse(input);
+			var command = _commandParser.Parse(input.ToLower());
 			_commandExecutor.ExecuteCommand(command);
 		}
 		catch (CommandException ex)

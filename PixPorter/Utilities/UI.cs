@@ -22,11 +22,11 @@ public static class UI
 
 	private static Panel CreateRightColumnPanel(Panel currentDirectoryPanel, Table directoryTable)
 	{
-		return new Panel(new Rows(new IRenderable[] { currentDirectoryPanel, directoryTable }))
+		return new Panel(new Rows([currentDirectoryPanel, directoryTable]))
 		{
 			BorderStyle = Color.LightSkyBlue1,
 			Header = new PanelHeader("Current Directory".ToUpper()),
-			Padding = new Padding(1),
+			Padding = new Padding(1, 1, 1, 0),
 		};
 	}
 
@@ -104,7 +104,7 @@ public static class UI
 		return new Panel(currentDirectory)
 		{
 			Border = BoxBorder.None,
-			Padding = new Padding(0, 0, 0, 1),
+			Padding = new Padding(2, 1),
 			Width = LayoutWidth
 		};
 	}
@@ -113,16 +113,17 @@ public static class UI
 	{
 		var table = new Table
 		{
-			Border = TableBorder.None,
+			Border = TableBorder.Minimal,
 			Width = LayoutWidth
 		};
 
 		table.AddColumn(new TableColumn(CreateDirectoryTree("Folders:", directoryTree)));
 		table.AddColumn(new TableColumn(CreateDirectoryTree("Image Files:", fileTree)));
+		table.Columns[0].PadBottom(0);
+		table.Columns[1].PadBottom(0);
 
 		return table;
 	}
-
 	private static IRenderable CreateDirectoryTree(string header, IEnumerable<string> items)
 	{
 		var tree = new Tree(header)
@@ -130,9 +131,11 @@ public static class UI
 			Style = new Style(foreground: Color.RosyBrown)
 		};
 
-		foreach (var item in items)
+		foreach (var node in !items.Any()
+			? new[] { "[dim italic]None[/]" }
+			: items.Select(item => $"[bold white]{item}[/]"))
 		{
-			tree.AddNode($"[bold white]{item}[/]");
+			tree.AddNode(node);
 		}
 
 		return tree;
