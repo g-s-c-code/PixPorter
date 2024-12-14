@@ -19,7 +19,7 @@
 			UI.RenderUI(DirectoryUtility.GetDirectories(),
 						DirectoryUtility.GetImageFiles());
 
-			var input = UI.Read("Enter command:");
+			var input = UI.ReadLine("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

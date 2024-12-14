@@ -25,11 +25,11 @@ public class ImageConverter
         {
             using var image = Image.Load(filePath);
             image.Save(outputPath, GetEncoder(outputFormat));
-            AnsiConsole.MarkupLine($"[green]Converted:[/] {filePath} -> {outputPath}");
+			UI.WriteLine($"Converted: {filePath} -> {outputPath}");
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Conversion failed: {ex.Message}[/]");
+            AnsiConsole.MarkupLine($"[rosybrown]Conversion failed: {ex.Message}[/]");
         }
     }
 
@@ -48,7 +48,7 @@ public class ImageConverter
         AnsiConsole.Progress()
             .Start(ctx =>
             {
-                var conversionTask = ctx.AddTask("[green]Converting Images[/]", maxValue: files.Count);
+                var conversionTask = ctx.AddTask("Converting Images", maxValue: files.Count);
 
                 foreach (var file in files)
                 {
@@ -59,12 +59,13 @@ public class ImageConverter
                     }
                     catch (Exception ex)
                     {
-                        AnsiConsole.MarkupLine($"[red]Conversion failed for {file}: {ex.Message}[/]");
+                        AnsiConsole.MarkupLine($"[rosybrown]Conversion failed for {file}: {ex.Message}[/]");
                     }
                 }
             });
 
-        AnsiConsole.MarkupLine("[green]All supported files have been successfully processed![/]");
+        UI.WriteAndWait("All supported files have been successfully processed.");
+        Console.ReadKey();
     }
 
     private string DetermineOutputFormat(string inputExtension, string? targetFormat)

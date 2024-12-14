@@ -27,7 +27,7 @@ public class CommandService(ImageConverter converter)
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.Write("[rosybrown]Unknown command.[/]");
+				UI.WriteLine("[rosybrown]Unknown command.[/]");
 				break;
 		}
 	}
@@ -59,7 +59,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!File.Exists(path))
 		{
-			UI.Write($"File not found: {path}");
+			UI.WriteLine($"File not found: {path}");
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.Write($"Failed to convert file: {ex.Message}");
+			UI.WriteLine($"Failed to convert file: {ex.Message}");
 		}
 	}
 
@@ -77,7 +77,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!Directory.Exists(path))
 		{
-			UI.Write($"Directory not found: {path}");
+			UI.WriteLine($"Directory not found: {path}");
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.Write($"Failed to convert directory: {ex.Message}");
+			UI.WriteLine($"Failed to convert directory: {ex.Message}");
 		}
 	}
 }

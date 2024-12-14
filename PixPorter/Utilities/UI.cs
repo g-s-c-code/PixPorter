@@ -144,20 +144,27 @@ public static class UI
 		return tree;
 	}
 
-	public static void Write(string message)
+	public static void Write(string message, Color? color = null)
+	{
+		var styledMessage = new Markup(message, color ?? Color.White);
+
+		AnsiConsole.Write(styledMessage);
+	}
+
+	public static void WriteLine(string message)
 	{
 		AnsiConsole.WriteLine(message);
 	}
 
 	public static void WriteAndWait(string message, Color? color = null)
 	{
-		var styledMessage = new Markup(message, color ?? Color.RosyBrown);
+		var styledMessage = new Markup(message, color ?? Color.White);
 
 		AnsiConsole.Write(styledMessage);
 		Console.ReadKey();
 	}
 
-	public static string Read(string prompt)
+	public static string ReadLine(string prompt)
 	{
 		return AnsiConsole.Ask<string>(prompt);
 	}
