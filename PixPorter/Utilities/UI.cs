@@ -61,16 +61,16 @@ public static class UI
 		}),
 		BuildSection("Commands", new[]
 		{
-			("[steelblue]--ca[/]       ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]"),
+			("[steelblue]--ca[/]     ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]"),
 			("[steelblue]cd [[path]][/]", "- Change directory"),
 			("[steelblue]help[/]     ", "- Open the detailed instructions menu"),
 			("[steelblue]q[/]        ", "- Exit application"),
 		}),
 		BuildSection("Conversion Format Flags", new[]
 		{
-			("[steelblue]--png[/]     ", "- Convert to PNG"),
-			("[steelblue]--jpg[/]     ", "- Convert to JPG"),
-			("[steelblue]--webp[/]    ", "- Convert to WebP"),
+			("[steelblue]--png[/]    ", "- Convert to PNG"),
+			("[steelblue]--jpg[/]    ", "- Convert to JPG"),
+			("[steelblue]--webp[/]   ", "- Convert to WebP"),
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
 			.Where(c => c.Key != Constants.JpegFileFormat)
