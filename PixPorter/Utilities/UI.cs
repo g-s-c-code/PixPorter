@@ -21,7 +21,7 @@ public static class UI
 		var layoutTable = new Table
 		{
 			Border = TableBorder.Horizontal,
-			Title = new TableTitle("PixPorter - Image Converter and Compressor")
+			Title = new TableTitle("PixPorter - A Simple Image Conversion Tool")
 		};
 
 		layoutTable.AddColumn(new TableColumn(leftPanel).Padding(0, 0));
@@ -173,40 +173,44 @@ public static class UI
 	{
 		public static List<string> GetHelpDetails()
 		{
-			return new List<string>
-			{
-				"PixPorter - a simple tool for converting image files",
-				"",
-				"[yellow underline bold]Features:[/]",
-				"- Convert images between PNG, JPG, JPEG, and WebP formats.",
-				"- Process individual files or entire folders with ease.",
-				"",
-				"[yellow underline bold]Quick Start Guide:[/]",
-				"PixPorter can be used as a command-line tool or a drag-and-drop utility. Here are the outline for each approach:",
-				"- Drag & drop image files or folders containing image files into the PixPorter window and hit enter for immediate action. This will convert all images to the default conversion formats. You can also add format flags after the file or folder path to specify the output format.",
-				"2. To convert a single image to a specific format, type the file path and, optionally, specify the format (e.g., 'image.png -webp').",
-				"3. To batch convert a folder, provide the folder path (e.g., 'folder-path -jpg').",
-				"   - If the folder path is prefixed with 'cd ', it will navigate to the directory instead.",
-				"4. To convert all images in the current directory, use the '-ca' flag.",
-				"",
-				"[yellow underline bold]Usage Tips:[/]",
-				"- Use 'cd [path]' to change directories.",
-				"- Enter 'help' for this guide or 'q' to quit the application.",
-				"",
-				"[yellow underline bold]Flags and Their Functions:[/]",
-				"- '-png': Convert to PNG format.",
-				"- '-jpg': Convert to JPG format.",
-				"- '-jpeg': Convert to JPEG format.",
-				"- '-webp': Convert to WebP format.",
-				"- '-ca': Convert all supported files in the current directory.",
-				"",
-				"[yellow underline bold]Default Conversion Mapping:[/]",
-				string.Join(", ", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}")),
-				"",
-				"For additional details, consult the application documentation or type 'help' at any time!"
-			};
+			return
+[
+"[yellow underline bold]FEATURES:[/]",
+"- Seamlessly convert images between PNG, JPG, JPEG, and WebP formats.",
+"",
+"[yellow underline bold]HOW TO USE:[/]",
+"- Add format flags [italic]if[/] you need a specific output format.",
+"- Format flags are optional. Default conversion mappings are pre-configured (see below).",
+"",
+"[yellow underline bold]INTERACTION METHODS:[/]",
+"1. [lightskyblue1 bold]DRAG & DROP[/]:",
+"- Drag a file or folder into the PixPorter window. Add an optional format flag if desired.",
+"   [steelblue]Example:[/] 'my_photo.png' + 'ENTER' -> Converts to the default format (e.g., 'my_photo.webp').",
+"   [steelblue]Example:[/] 'my_photo.png -jpg' + 'ENTER' -> Converts to JPG (e.g., 'my_photo.jpg').",
+"",
+"2. [lightskyblue1 bold]DIRECT FILE/FOLDER CONVERSION[/]:",
+"- Enter a valid file path for automatic conversion of an image file.",
+"- Enter a folder path for automatic conversion of all image files in that folder.",
+"   [steelblue]Example:[/] 'C:\\Users\\Pictures -webp' + 'ENTER' -> Converts all images in the folder to WebP.",
+"",
+"3. [lightskyblue1 bold]CURRENT DIRECTORY CONVERSION[/]:",
+"- Use the command line to navigate to a directory and perform conversions.",
+"- 'cd [[path]]' -> Navigate to the desired directory.",
+"- '-ca' -> Converts all images in the current directory.",
+"- '-ca -png' -> Converts all images in the current directory to PNG.",
+"   [steelblue]Example:[/] 'cd C:\\Users\\Photos' + 'ENTER' -> Navigate to the directory.",
+"   [steelblue]Example:[/] '-ca -jpg' + 'ENTER' -> Converts all images in the current directory to JPG.",
+"",
+"[yellow underline bold]CONVERSION FLAGS:[/]",
+"'-png': Convert to PNG",
+"'-jpg': Convert to JPG",
+"'-webp': Convert to WebP",
+"'-ca': Convert all files in the current directory",
+"",
+"[yellow underline bold]DEFAULT CONVERSION MAPPING:[/]",
+	string.Join(", ", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}")),
+			];
 		}
-
 	}
 	private static Table HelpContentUI()
 	{
@@ -214,7 +218,7 @@ public static class UI
 		{
 			Border = TableBorder.Horizontal,
 			Width = LayoutWidth,
-			Title = new TableTitle("PixPorter - Help Section")
+			Title = new TableTitle("PixPorter - A Simple Image Conversion Tool")
 		};
 
 		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
