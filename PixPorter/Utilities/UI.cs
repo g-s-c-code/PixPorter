@@ -55,7 +55,7 @@ public static class UI
 		{
 			BuildSection("Usage Instructions", new[]
 			{
-				("[rosybrown]Drag & Drop[/]", "Drag an image into the window, then press 'Enter' to convert it."),
+				("[rosybrown]Drag & Drop[/]", "Drag an image into the window, then press [[ENTER]] to convert it."),
 				("[rosybrown]Folder Navigation[/]", "Use 'cd [[path]]' to navigate to a folder, then use the '-ca' flag to convert [underline]all[/] image files in that folder, or simply write the name of image you wish to convert.")
 			}),
 			BuildSection("Commands", new[]
@@ -175,40 +175,32 @@ public static class UI
 		{
 			return
 [
-"[yellow underline bold]FEATURES:[/]",
-"- Seamlessly convert images between PNG, JPG, JPEG, and WebP formats.",
-"",
-"[yellow underline bold]HOW TO USE:[/]",
+"[lightskyblue1 underline bold]HOW TO USE:[/]",
 "- Add format flags [italic]if[/] you need a specific output format.",
 "- Format flags are optional. Default conversion mappings are pre-configured (see below).",
+$"Default mappings: {string.Join(" | ", Constants.DefaultConversions.Select(c => $"[steelblue]{c.Key}[/] -> [steelblue]{c.Value}[/]"))}",
 "",
-"[yellow underline bold]INTERACTION METHODS:[/]",
-"1. [lightskyblue1 bold]DRAG & DROP[/]:",
+"[rosybrown bold]DRAG & DROP[/]:",
 "- Drag a file or folder into the PixPorter window. Add an optional format flag if desired.",
-"   [steelblue]Example:[/] 'my_photo.png' + 'ENTER' -> Converts to the default format (e.g., 'my_photo.webp').",
-"   [steelblue]Example:[/] 'my_photo.png -jpg' + 'ENTER' -> Converts to JPG (e.g., 'my_photo.jpg').",
+"   [bold]EXAMPLE: 'my_photo.png' + [[ENTER]] -> Converts to the default format (e.g., 'my_photo.webp').[/]",
+"   [bold]EXAMPLE: 'my_photo.png -jpg' + [[ENTER]] -> Converts to JPG (e.g., 'my_photo.jpg').[/]",
 "",
-"2. [lightskyblue1 bold]DIRECT FILE/FOLDER CONVERSION[/]:",
-"- Enter a valid file path for automatic conversion of an image file.",
-"- Enter a folder path for automatic conversion of all image files in that folder.",
-"   [steelblue]Example:[/] 'C:\\Users\\Pictures -webp' + 'ENTER' -> Converts all images in the folder to WebP.",
+"[rosybrown bold]DIRECT FILE/FOLDER CONVERSION[/]:",
+"- Enter a full file path or a folder path (and an optional format flat) + [[ENTER]] for automatic conversion.",
+"   [bold]EXAMPLE: 'C:\\Users\\Pictures -webp' + [[ENTER]] -> Converts all images in the folder to WebP.[/]",
 "",
-"3. [lightskyblue1 bold]CURRENT DIRECTORY CONVERSION[/]:",
+"[rosybrown bold]CURRENT DIRECTORY CONVERSION[/]:",
 "- Use the command line to navigate to a directory and perform conversions.",
 "- 'cd [[path]]' -> Navigate to the desired directory.",
 "- '-ca' -> Converts all images in the current directory.",
-"- '-ca -png' -> Converts all images in the current directory to PNG.",
-"   [steelblue]Example:[/] 'cd C:\\Users\\Photos' + 'ENTER' -> Navigate to the directory.",
-"   [steelblue]Example:[/] '-ca -jpg' + 'ENTER' -> Converts all images in the current directory to JPG.",
+"   [bold]EXAMPLE: 'cd C:\\Users\\Photos' + [[ENTER]] -> Navigate to the directory.[/]",
+"   [bold]EXAMPLE: '-ca -jpg' + [[ENTER]] -> Converts all images in the current directory to JPG.[/]",
 "",
-"[yellow underline bold]CONVERSION FLAGS:[/]",
+"[lightskyblue1 underline bold]CONVERSION FLAGS:[/]",
 "'-png': Convert to PNG",
 "'-jpg': Convert to JPG",
 "'-webp': Convert to WebP",
 "'-ca': Convert all files in the current directory",
-"",
-"[yellow underline bold]DEFAULT CONVERSION MAPPING:[/]",
-	string.Join(", ", Constants.DefaultConversions.Select(c => $"{c.Key} -> {c.Value}")),
 			];
 		}
 	}
