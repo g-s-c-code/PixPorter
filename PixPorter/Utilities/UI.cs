@@ -53,30 +53,24 @@ public static class UI
 
 		var sections = new[]
 		{
-			BuildSection("Usage Instructions", new[]
-			{
-				("[rosybrown]Drag & Drop[/]", "Drag an image into the window, then press [[ENTER]] to convert it."),
-				("[rosybrown]Folder Navigation[/]", "Use 'cd [[path]]' to navigate to a folder, then use the '-ca' flag to convert [underline]all[/] image files in that folder, or simply write the name of image you wish to convert.")
-			}),
-			BuildSection("Commands", new[]
-			{
-				("[rosybrown]cd[/]", "Change the current working directory."),
-				("[rosybrown]q[/]", "Exit the application."),
-				("[rosybrown]help[/]", "Display help information.")
-			}),
-			BuildSection("Flags", new[]
-			{
-				("[rosybrown]-ca[/]", "Convert all files in a directory."),
-				("[rosybrown]-png[/]", "Set output format to PNG."),
-				("[rosybrown]-jpg[/]", "Set output format to JPG."),
-				("[rosybrown]-webp[/]", "Set output format to WEBP.")
-			}),
-			BuildSection("Default Conversion Formats",
-				Constants.DefaultConversions
-					.Where(c => c.Key != Constants.FileFormats.Jpeg)
-					.Select(c => ($"", $"{c.Key} -> {c.Value}"))
-					.ToArray())
-		};
+		BuildSection("Usage Quick Guide", new[]
+		{
+			("[rosybrown]Drag & Drop[/]", "Drag an image, press [[ENTER]] to convert."),
+			("[rosybrown]Navigation[/]", "Use 'cd [[path]]' to navigate to a folder. Convert all with '-ca'."),
+			("[rosybrown]Conversion Flags[/]",
+				"[rosybrown]-png[/]: Convert to PNG\n[rosybrown]-jpg[/]: Convert to JPG\n[rosybrown]-webp[/]: Convert to WebP\n[rosybrown]-ca[/]: Convert all files in current directory")
+		}),
+		BuildSection("Quick Commands", new[]
+		{
+			("[rosybrown]'cd [[path]]'[/]", "Change directory"),
+			("[rosybrown]'q'[/]", "Exit application"),
+			("[rosybrown]'help'[/]", "Show detailed instructions")
+		}),
+		BuildSection("Default Conversion Formats", Constants.DefaultConversions
+			.Where(c => c.Key != Constants.FileFormats.Jpeg)
+			.Select(c => (c.Key.ToString(), $"-> {c.Value}"))
+			.ToArray())
+	};
 
 		foreach (var section in sections)
 		{
@@ -85,6 +79,7 @@ public static class UI
 
 		return table;
 	}
+
 
 	private static IRenderable BuildSection(string title, (string Key, string Value)[] items)
 	{
