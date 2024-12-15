@@ -1,7 +1,5 @@
 ﻿using System.Text;
 using Spectre.Console;
-using static Constants;
-
 public class CommandService(ImageConverter converter)
 {
 	private readonly ImageConverter _converter = converter;
@@ -10,20 +8,20 @@ public class CommandService(ImageConverter converter)
 	{
 		switch (command.Name.ToLower())
 		{
-			case Commands.Exit:
+			case Constants.Exit:
 				Environment.Exit(0);
 				break;
-			case Commands.Help:
+			case Constants.Help:
 				UI.RenderUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles(), true);
 				UI.WriteAndWait("Press any key to return...", Color.SteelBlue);
 				break;
-			case Commands.ChangeDirectory:
+			case Constants.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
-			case Commands.ConvertFile:
+			case Constants.ConvertFileFlag:
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
 				break;
-			case Commands.ConvertAll:
+			case Constants.ConvertAllFlag:
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:

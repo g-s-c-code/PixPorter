@@ -1,26 +1,33 @@
 ﻿public class CommandParser
 {
+	private const string QuotationMark = "\"";
+	private const string Exit = "exit";
+	private const string Q = "q";
+	private const string Quit = "quit";
+	private const string Help = "help";
+	private const string ChangeDirectory = "cd ";
+
 	public Command Parse(string input)
 	{
-		if (input.StartsWith("\"") && input.EndsWith("\""))
+		if (input.StartsWith(QuotationMark) && input.EndsWith(QuotationMark))
 		{
-			input = input.Substring(1, input.Length - 2);
+			input = input[1..^1];
 		}
 
-		if (input == "exit" || input == "q" || input == "quit")
+		if (input == Exit || input == Q || input == Quit)
 		{
-			return new Command(Constants.Commands.Exit, []);
+			return new Command(Constants.Exit, []);
 		}
 
-		if (input == "help")
+		if (input == Help)
 		{
-			return new Command(Constants.Commands.Help, []);
+			return new Command(Constants.Help, []);
 		}
 
-		if (input.StartsWith("cd "))
+		if (input.StartsWith(Constants.ChangeDirectory))
 		{
 			string path = input.Substring(3).Trim();
-			return new Command(Constants.Commands.ChangeDirectory, [path]);
+			return new Command(Constants.ChangeDirectory, [path]);
 		}
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -30,7 +37,7 @@
 
 		if (parts.Contains("-ca"))
 		{
-			return new Command(Constants.Commands.ConvertAll,
+			return new Command(Constants.ConvertAllFlag,
 				Array.Empty<string>(),
 				MapFormatFlag(formatFlag));
 		}
@@ -44,7 +51,7 @@
 			string? resolvedDirectoryPath = checkPaths.FirstOrDefault(Directory.Exists);
 			if (resolvedDirectoryPath != null)
 			{
-				return new Command(Constants.Commands.ConvertAll,
+				return new Command(Constants.ConvertAllFlag,
 					[resolvedDirectoryPath],
 					MapFormatFlag(formatFlag));
 			}
@@ -52,7 +59,7 @@
 			string? resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
 			if (resolvedFilePath != null)
 			{
-				return new Command(Constants.Commands.ConvertFile,
+				return new Command(Constants.ConvertFileFlag,
 					[resolvedFilePath],
 					MapFormatFlag(formatFlag));
 			}
@@ -65,10 +72,10 @@
 	{
 		return flag switch
 		{
-			Constants.Flags.Png => Constants.FileFormats.Png,
-			Constants.Flags.Jpg => Constants.FileFormats.Jpg,
-			Constants.Flags.Jpeg => Constants.FileFormats.Jpeg,
-			Constants.Flags.Webp => Constants.FileFormats.Webp,
+			Constants.PngFlag => Constants.PngFileFormat,
+			Constants.JpgFlag => Constants.JpgFileFormat,
+			Constants.JpegFlag => Constants.JpegFileFormat,
+			Constants.WebpFlag => Constants.WebpFileFormat,
 			_ => null
 		};
 	}

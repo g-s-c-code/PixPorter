@@ -73,7 +73,7 @@ public static class UI
 			("[steelblue]-webp[/]    ", "- Convert to WebP"),
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
-			.Where(c => c.Key != Constants.FileFormats.Jpeg)
+			.Where(c => c.Key != Constants.JpegFileFormat)
 			.Select(c => ($"[indianred]{c.Key}[/]"  , $"-> [indianred]{c.Value}[/]"))
 			.ToArray()),
 		};

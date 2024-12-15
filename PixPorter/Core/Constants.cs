@@ -1,41 +1,30 @@
 ﻿public static class Constants
 {
-	public static class Commands
-	{
-		public const string ConvertFile = "convert";
-		public const string ConvertAll = "convert-all";
-		public const string ChangeDirectory = "cd";
-		public const string Exit = "q";
-		public const string Help = "help";
-	}
+	public const string SingleQuotationMark = "\"";
+	public const string ConvertFileFlag = "-cf";
+	public const string ConvertAllFlag = "-ca";
+	public const string ChangeDirectory = "cd ";
+	public const string Exit = "q";
+	public const string Help = "help";
+	public const string PngFlag = "-png";
+	public const string JpgFlag = "-jpg";
+	public const string JpegFlag = "-jpeg";
+	public const string WebpFlag = "-webp";
+	public const string PngFileFormat = ".png";
+	public const string JpgFileFormat = ".jpg";
+	public const string JpegFileFormat = ".jpeg";
+	public const string WebpFileFormat = ".webp";
 
-	public static class Flags
+	public static readonly HashSet<string> SupportedFileFormats = new(StringComparer.OrdinalIgnoreCase)
 	{
-		public const string ConvertAll = "-ca";
-		public const string Png = "-png";
-		public const string Jpg = "-jpg";
-		public const string Jpeg = "-jpeg";
-		public const string Webp = "-webp";
-	}
-
-	public static class FileFormats
-	{
-		public const string Png = ".png";
-		public const string Jpg = ".jpg";
-		public const string Jpeg = ".jpeg";
-		public const string Webp = ".webp";
-
-		public static readonly HashSet<string> SupportedFormats = new(StringComparer.OrdinalIgnoreCase)
-		{
-			Png, Jpg, Jpeg, Webp
-		};
-	}
+		PngFileFormat, JpgFileFormat, JpegFileFormat, WebpFileFormat
+	};
 
 	public static Dictionary<string, string> DefaultConversions { get; } = new()
 	{
-		{ FileFormats.Png, FileFormats.Webp },
-		{ FileFormats.Jpg, FileFormats.Webp },
-		{ FileFormats.Jpeg, FileFormats.Webp },
-		{ FileFormats.Webp, FileFormats.Png }
+		{ PngFileFormat, WebpFileFormat },
+		{ JpgFileFormat, WebpFileFormat },
+		{ JpegFileFormat, WebpFileFormat },
+		{ WebpFileFormat, PngFileFormat }
 	};
 }

@@ -33,7 +33,7 @@
 
 	public static IEnumerable<string> GetImageFiles()
 	{
-		return GetEntries(file => Constants.FileFormats.SupportedFormats.Contains(Path.GetExtension(file),
+		return GetEntries(file => Constants.SupportedFileFormats.Contains(Path.GetExtension(file),
 			StringComparer.OrdinalIgnoreCase),
 			"File");
 	}

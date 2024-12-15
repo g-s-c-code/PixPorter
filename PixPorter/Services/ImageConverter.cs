@@ -9,10 +9,10 @@ public class ImageConverter
 {
 	private readonly Dictionary<string, IImageEncoder> _encoders = new()
 	{
-		{ Constants.FileFormats.Webp, new WebpEncoder() },
-		{ Constants.FileFormats.Png, new PngEncoder() },
-		{ Constants.FileFormats.Jpg, new JpegEncoder() },
-		{ Constants.FileFormats.Jpeg, new JpegEncoder() }
+		{ Constants.WebpFileFormat, new WebpEncoder() },
+		{ Constants.PngFileFormat, new PngEncoder() },
+		{ Constants.JpegFileFormat, new JpegEncoder() },
+		{ Constants.JpgFileFormat, new JpegEncoder() }
 	};
 
 	public void ConvertFile(string filePath, string? targetFormat = null)
@@ -84,7 +84,7 @@ public class ImageConverter
 	private bool IsSupported(string filePath, string? targetFormat)
 	{
 		string extension = Path.GetExtension(filePath).ToLower();
-		return Constants.FileFormats.SupportedFormats.Contains(extension) &&
+		return Constants.SupportedFileFormats.Contains(extension) &&
 			   (targetFormat == null || Constants.DefaultConversions.ContainsKey(extension));
 	}
 }
