@@ -29,7 +29,7 @@ public class ImageConverter
 		}
 		catch (Exception ex)
 		{
-			AnsiConsole.MarkupLine($"[rosybrown]Conversion failed: {ex.Message}[/]");
+			UI.WriteAndWait($"Conversion failed: {ex.Message}", Spectre.Console.Color.RosyBrown);
 		}
 	}
 

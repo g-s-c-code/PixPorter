@@ -20,6 +20,7 @@ public class CommandService(ImageConverter converter)
 				break;
 			case Constants.ConvertFileFlag:
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
+				Console.ReadKey();
 				break;
 			case Constants.ConvertAllFlag:
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
