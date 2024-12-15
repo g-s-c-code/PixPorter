@@ -8,7 +8,7 @@ public class CommandService(ImageConverter converter)
 	{
 		switch (command.Name.ToLower())
 		{
-			case Constants.Exit:
+			case Constants.Quit:
 				Environment.Exit(0);
 				break;
 			case Constants.Help:
@@ -18,11 +18,11 @@ public class CommandService(ImageConverter converter)
 			case Constants.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
 				break;
-			case Constants.ConvertFileFlag:
+			case Constants.ConvertFile:
 				ConvertFile(command.Arguments.FirstOrDefault() ?? "", command.TargetFormat);
 				Console.ReadKey();
 				break;
-			case Constants.ConvertAllFlag:
+			case Constants.ConvertAll:
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:

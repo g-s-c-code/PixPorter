@@ -1,10 +1,12 @@
 ﻿public static class Constants
 {
 	public const string SingleQuotationMark = "\"";
-	public const string ConvertFileFlag = "-cf";
-	public const string ConvertAllFlag = "-ca";
+	public const string ConvertFile = "-cf";
+	public const string ConvertAll = "-ca";
 	public const string ChangeDirectory = "cd ";
-	public const string Exit = "q";
+	public const string Exit = "exit";
+	public const string Q = "q";
+	public const string Quit = "quit";
 	public const string Help = "help";
 	public const string PngFlag = "-png";
 	public const string JpgFlag = "-jpg";

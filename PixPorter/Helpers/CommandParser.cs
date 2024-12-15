@@ -1,25 +1,18 @@
 ﻿public class CommandParser
 {
-	private const string QuotationMark = "\"";
-	private const string Exit = "exit";
-	private const string Q = "q";
-	private const string Quit = "quit";
-	private const string Help = "help";
-	private const string ChangeDirectory = "cd ";
-
 	public Command Parse(string input)
 	{
-		if (input.StartsWith(QuotationMark) && input.EndsWith(QuotationMark))
+		if (input.StartsWith(Constants.SingleQuotationMark) && input.EndsWith(Constants.SingleQuotationMark))
 		{
 			input = input[1..^1];
 		}
 
-		if (input == Exit || input == Q || input == Quit)
+		if (input == Constants.Exit || input == Constants.Q || input == Constants.Quit)
 		{
-			return new Command(Constants.Exit, []);
+			return new Command(Constants.Quit, []);
 		}
 
-		if (input == Help)
+		if (input == Constants.Help)
 		{
 			return new Command(Constants.Help, []);
 		}
@@ -37,7 +30,7 @@
 
 		if (parts.Contains("-ca"))
 		{
-			return new Command(Constants.ConvertAllFlag,
+			return new Command(Constants.ConvertAll,
 				Array.Empty<string>(),
 				MapFormatFlag(formatFlag));
 		}
@@ -51,7 +44,7 @@
 			string? resolvedDirectoryPath = checkPaths.FirstOrDefault(Directory.Exists);
 			if (resolvedDirectoryPath != null)
 			{
-				return new Command(Constants.ConvertAllFlag,
+				return new Command(Constants.ConvertAll,
 					[resolvedDirectoryPath],
 					MapFormatFlag(formatFlag));
 			}
@@ -59,7 +52,7 @@
 			string? resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
 			if (resolvedFilePath != null)
 			{
-				return new Command(Constants.ConvertFileFlag,
+				return new Command(Constants.ConvertFile,
 					[resolvedFilePath],
 					MapFormatFlag(formatFlag));
 			}
