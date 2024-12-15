@@ -24,9 +24,9 @@ PixPorter offers pre-built, runnable files for Windows, macOS, and Linux. These 
 
 | Platform  | Download Link                                          | Instructions              |
 |-----------|--------------------------------------------------------|---------------------------|
-| Windows   | [PixPorter-win-x64](Release/PixPorter.exe) | Download and run the `PixPorter.exe` executable. |
-| macOS     | [PixPorter-osx-x64](./bin/Release/net8.0/osx-x64/publish/PixPorter) | Download and run the `PixPorter` executable. Make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
-| Linux     | [PixPorter-linux-x64](./bin/Release/net8.0/linux-x64/publish/PixPorter) | Download and run the `PixPorter` executable. Make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
+| Windows   | [PixPorter-win-x64](Releases/PixPorter-windows-x64.zip) | Download and run the `PixPorter.exe` executable. |
+| macOS     | [PixPorter-osx-x64](Releases/PixPorter-osx-x64.zip) | Download and make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
+| Linux     | [PixPorter-linux-x64](Releases/PixPorter-linux-x64.zip) | Download and make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
 
 Alternatively, you can download the source code and build the project yourself using Visual Studio:
 1. Clone the repository.
