@@ -26,7 +26,7 @@ public class CommandService(ImageConverter converter)
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.WriteLine("[rosybrown]Unknown command.[/]");
+				UI.WriteAndWait("Unknown command.", Color.RosyBrown);
 				break;
 		}
 	}
@@ -35,7 +35,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			AnsiConsole.WriteLine("Path cannot be empty. Usage: cd [[path]]");
+			UI.WriteAndWait("Path cannot be empty. Usage: cd [[path]]", Color.RosyBrown);
 			return;
 		}
 
@@ -49,8 +49,7 @@ public class CommandService(ImageConverter converter)
 		}
 		else
 		{
-			AnsiConsole.WriteLine($"Directory not found: {newPath}");
-			Console.ReadKey();
+			UI.WriteAndWait($"Directory not found: {newPath}", Color.RosyBrown);
 		}
 	}
 
@@ -58,7 +57,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!File.Exists(path))
 		{
-			UI.WriteLine($"File not found: {path}");
+			UI.WriteAndWait($"File not found: {path}", Color.RosyBrown);
 			return;
 		}
 
@@ -68,7 +67,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.WriteLine($"Failed to convert file: {ex.Message}");
+			UI.WriteAndWait($"Failed to convert file: {ex.Message}", Color.RosyBrown);
 		}
 	}
 
@@ -76,7 +75,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!Directory.Exists(path))
 		{
-			UI.WriteLine($"Directory not found: {path}");
+			UI.WriteAndWait($"Directory not found: {path}", Color.RosyBrown);
 			return;
 		}
 
@@ -86,7 +85,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.WriteLine($"Failed to convert directory: {ex.Message}");
+			UI.WriteAndWait($"Failed to convert directory: {ex.Message}", Color.RosyBrown);
 		}
 	}
 }
