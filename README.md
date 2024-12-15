@@ -24,14 +24,15 @@ PixPorter offers pre-built, runnable files for Windows, macOS, and Linux. These 
 
 | Platform  | Download Link                                          | Instructions              |
 |-----------|--------------------------------------------------------|---------------------------|
-| Windows   | [PixPorter-win-x64.zip](./bin/Release/net8.0/win-x64/publish/PixPorter-win-x64.zip) | Extract and run the `PixPorter.exe` executable |
-| macOS     | [PixPorter-osx-x64.zip](./bin/Release/net8.0/osx-x64/publish/PixPorter-osx-x64.zip) | Extract and run the `PixPorter` executable  |
-| Linux     | [PixPorter-linux-x64.zip](./bin/Release/net8.0/linux-x64/publish/PixPorter-linux-x64.zip) | Extract and run the `PixPorter` executable  |
+| Windows   | [PixPorter-win-x64](Release/PixPorter.exe) | Download and run the `PixPorter.exe` executable. |
+| macOS     | [PixPorter-osx-x64](./bin/Release/net8.0/osx-x64/publish/PixPorter) | Download and run the `PixPorter` executable. Make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
+| Linux     | [PixPorter-linux-x64](./bin/Release/net8.0/linux-x64/publish/PixPorter) | Download and run the `PixPorter` executable. Make it executable with `chmod +x PixPorter` and run with `./PixPorter`. |
 
 Alternatively, you can download the source code and build the project yourself using Visual Studio:
 1. Clone the repository.
 2. Open the project in Visual Studio.
 3. Build and run the project.
+
 
 1. Clone the repository:
    ```bash
