@@ -20,9 +20,18 @@ This project utilizes the excellent [SixLabors.ImageSharp](https://github.com/Si
 
 ### Download and Run
 
-PixPorter offers pre-built, runnable files for Windows, macOS, and Linux. These can be downloaded directly from the [releases page](#).
+PixPorter offers pre-built, runnable files for Windows, macOS, and Linux. These can be downloaded directly here:
+
+| Platform  | Download Link                                          | Instructions              |
+|-----------|--------------------------------------------------------|---------------------------|
+| Windows   | [PixPorter-win-x64.zip](./bin/Release/net8.0/win-x64/publish/PixPorter-win-x64.zip) | Extract and run the `PixPorter.exe` executable |
+| macOS     | [PixPorter-osx-x64.zip](./bin/Release/net8.0/osx-x64/publish/PixPorter-osx-x64.zip) | Extract and run the `PixPorter` executable  |
+| Linux     | [PixPorter-linux-x64.zip](./bin/Release/net8.0/linux-x64/publish/PixPorter-linux-x64.zip) | Extract and run the `PixPorter` executable  |
 
 Alternatively, you can download the source code and build the project yourself using Visual Studio:
+1. Clone the repository.
+2. Open the project in Visual Studio.
+3. Build and run the project.
 
 1. Clone the repository:
    ```bash
@@ -52,27 +61,27 @@ When running PixPorter, the application launches an interactive prompt where you
 ### Commands
 
 - **`cd [path]`**: Change the current directory to the specified path.
-- **`ca`**: Convert all images in the current directory.
 - **`[file]`**: Convert a specific image file.
-- **`q`**: Exit the application.
+- **`--ca`**: Convert all images in the current directory.
+- **`--png`, `--jpg`, `--jpeg`, `--webp`**: Optional format flags. Specify the target format for conversion.
 - **`help`**: Display a list of available commands.
-- **`-png`, `-jpg`, `-jpeg`, `-webp`**: Optional format flags. Specify the target format for conversion.
+- **`q`**: Exit the application.
 
 ### Example Usage
 
 Convert all images in the current directory to WebP:
 ```bash
-ca -webp
+--ca --webp
 ```
 
-Convert a single image to JPG, using the optional -jpg flag:
+Convert a single image to JPG, using the optional --jpg flag:
 ```bash
-my_image.png -jpg
+my_image.png --jpg
 ```
 
 Change the working directory:
 ```bash
-cd C:\Users\Pictures
+cd C:\Users\Pictures or cd C:/Users/Pictures
 ```
 
 Display the help menu:
@@ -95,7 +104,7 @@ PixPorter supports the following image format conversions:
 
 ## Contributing
 
-We welcome contributions to PixPorter! Here’s how you can get involved:
+Contributions are welcome. Here’s how you can get involved:
 
 1. Fork the repository.
 2. Create a feature branch for your changes.
