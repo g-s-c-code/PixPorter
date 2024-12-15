@@ -1,4 +1,6 @@
-﻿public class PixPorter
+﻿using Spectre.Console;
+
+public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
 

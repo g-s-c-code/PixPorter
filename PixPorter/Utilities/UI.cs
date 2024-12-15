@@ -22,7 +22,7 @@ public static class UI
 		var layoutTable = new Table
 		{
 			Border = TableBorder.Horizontal,
-			Title = new TableTitle("PixPorter - A Simple Image Conversion Tool")
+			Title = new TableTitle("PixPorter - Image Format Converter")
 		};
 
 		layoutTable.AddColumn(new TableColumn(leftPanel).Padding(0, 0));
@@ -63,7 +63,8 @@ public static class UI
 		{
 			("[steelblue]cd [[path]][/]", "- Change directory"),
 			("[steelblue]q[/]        ", "- Exit application"),
-			("[steelblue]-ca[/]      ", "- Convert all images in the [lightskyblue1 bold]current directory[/]")
+			("[steelblue]help[/]     ", "- Open the detailed instructions menu"),
+			("[steelblue]-ca[/]      ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]")
 		}),
 		BuildSection("Conversion Flags", new[]
 		{
@@ -73,9 +74,9 @@ public static class UI
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
 			.Where(c => c.Key != Constants.FileFormats.Jpeg)
-			.Select(c => ($"[indianred]{c.Key}[/]"	, $"-> [indianred]{c.Value}[/]"))
-			.ToArray())
-	};
+			.Select(c => ($"[indianred]{c.Key}[/]"  , $"-> [indianred]{c.Value}[/]"))
+			.ToArray()),
+		};
 
 		foreach (var section in sections)
 		{
@@ -169,57 +170,63 @@ public static class UI
 		return AnsiConsole.Ask<string>(prompt);
 	}
 
-	public static class HelpContent
+	public static List<IRenderable> GetHelpDetails()
 	{
-		public static List<string> GetHelpDetails()
+		return new List<IRenderable>
 		{
-			return
-[
-"[lightskyblue1 underline bold]HOW TO USE:[/]",
-"- Add format flags [italic]if[/] you need a specific output format.",
-"- Format flags are optional. Default conversion mappings are pre-configured (see below).",
-$"Default mappings: {string.Join(" | ", Constants.DefaultConversions.Select(c => $"[steelblue]{c.Key}[/] -> [steelblue]{c.Value}[/]"))}",
-"",
-"[indianred bold]DRAG & DROP[/]:",
-"- Drag a file or folder into the PixPorter window. Add an optional format flag if desired.",
-"   [bold]EXAMPLE: 'my_photo.png' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., 'my_photo.webp').[/]",
-"   [bold]EXAMPLE: 'my_photo.png -jpg' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., 'my_photo.jpg').[/]",
-"",
-"[indianred bold]DIRECT FILE/FOLDER CONVERSION[/]:",
-"- Enter a full file path or a folder path (and an optional format flat) + '[steelblue][[ENTER]][/]' for automatic conversion.",
-"   [bold]EXAMPLE: 'C:\\Users\\Pictures -webp' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.[/]",
-"",
-"[indianred bold]CURRENT DIRECTORY CONVERSION[/]:",
-"- Use the command line to navigate to a directory and perform conversions.",
-"- 'cd [[path]]' -> Navigate to the desired directory.",
-"- '-ca' -> Converts all images in the current directory.",
-"   [bold]EXAMPLE: 'cd C:\\Users\\Photos' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.[/]",
-"   [bold]EXAMPLE: '-ca -jpg' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.[/]",
-"",
-"[lightskyblue1 underline bold]CONVERSION FLAGS:[/]",
-"'-png': Convert to PNG",
-"'-jpg': Convert to JPG",
-"'-webp': Convert to WebP",
-"'-ca': Convert all files in the current directory",
-			];
-		}
+
+
+			BuildSection("Drag & Drop", new[]
+			{
+				("Drag a file or folder into the PixPorter window. Add an optional format flag if desired.", ""),
+				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png[/]' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., '[steelblue]my_photo.webp[/]').", ""),
+				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., '[steelblue]my_photo.jpg[/]').", "")
+			}),
+			BuildSection("Direct File/Folder Conversion", new[]
+			{
+				("Enter a full file path or a folder path (and an optional format flag) + '[steelblue][[ENTER]][/]' for automatic conversion.", ""),
+				("[indianred]EXAMPLE:[/] '[steelblue]C:\\Users\\Pictures -webp[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.", "")
+			}),
+			BuildSection("Current Directory Conversion", new[]
+			{
+				("Use the command line to navigate to a directory and perform conversions.", ""),
+				("[steelblue]cd [[path]][/]   - Navigate to the desired directory.", ""),
+				("[steelblue]-ca[/]         - Converts all images in the current directory.", ""),
+				("[indianred]EXAMPLE:[/] '[steelblue]cd C:\\Users\\Photos[/]' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.", ""),
+				("[indianred]EXAMPLE:[/] '[steelblue]-ca -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
+			}),
+			BuildSection("How to Use", new[]
+			{
+				("Add format flags [italic]if[/] you need a specific output format. These are optional since default mappings are pre-set.", ""),
+				($"Default mappings: {string.Join(" | ", Constants.DefaultConversions.Select(c => $"[indianred]{c.Key}[/] -> [indianred]{c.Value}[/]"))}", "")
+			}),
+			BuildSection("Flags", new[]
+			{
+				("[steelblue]-png[/]   ", "- Convert to PNG"),
+				("[steelblue]-jpg[/]   ", "- Convert to JPG"),
+				("[steelblue]-webp[/]  ", "- Convert to WebP"),
+				("[steelblue]-ca[/]    ", "- Convert all image files in the current directory"),
+			}),
+		};
 	}
+
 	private static Table HelpContentUI()
 	{
 		var table = new Table
 		{
 			Border = TableBorder.Horizontal,
 			Width = LayoutWidth,
-			Title = new TableTitle("PixPorter - A Simple Image Conversion Tool")
+			Title = new TableTitle("PixPorter - Image Format Converter"),
 		};
 
 		table.AddColumn(new TableColumn(string.Empty)).HideHeaders();
 
-		foreach (var detail in HelpContent.GetHelpDetails())
+		foreach (var section in GetHelpDetails())
 		{
-			table.AddRow($"[white]{detail}[/]");
+			table.AddRow(section);
 		}
 
 		return table;
 	}
+
 }
