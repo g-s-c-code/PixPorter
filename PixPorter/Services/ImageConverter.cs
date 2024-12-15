@@ -25,7 +25,7 @@ public class ImageConverter
 		{
 			using var image = Image.Load(filePath);
 			image.Save(outputPath, GetEncoder(outputFormat));
-			UI.WriteLine($"Converted: {filePath} -> {outputPath}");
+			UI.Write($"Converted: {filePath} -> {outputPath}", Spectre.Console.Color.SteelBlue);
 		}
 		catch (Exception ex)
 		{
@@ -41,7 +41,7 @@ public class ImageConverter
 
 		if (files.Count == 0)
 		{
-			AnsiConsole.MarkupLine("[yellow]No supported image files found in the directory.[/]");
+			UI.WriteAndWait("No supported image files found in the directory.", Spectre.Console.Color.Yellow);
 			return;
 		}
 
@@ -59,10 +59,11 @@ public class ImageConverter
 					}
 					catch (Exception ex)
 					{
-						AnsiConsole.MarkupLine($"[rosybrown]Conversion failed for {file}: {ex.Message}[/]");
+						UI.WriteAndWait($"Conversion failed for {file}: {ex.Message}[/]", Spectre.Console.Color.RosyBrown);
 					}
 				}
 			});
+
 		UI.WriteAndWait("All supported files have been successfully processed.");
 	}
 

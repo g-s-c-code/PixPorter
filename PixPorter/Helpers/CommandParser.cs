@@ -2,19 +2,21 @@
 {
 	public Command Parse(string input)
 	{
-		// Exit command
+		if (input.StartsWith("\"") && input.EndsWith("\""))
+		{
+			input = input.Substring(1, input.Length - 2);
+		}
+
 		if (input == "exit" || input == "q" || input == "quit")
 		{
 			return new Command(Constants.Commands.Exit, []);
 		}
 
-		// Help command
 		if (input == "help")
 		{
 			return new Command(Constants.Commands.Help, []);
 		}
 
-		// Change directory command
 		if (input.StartsWith("cd "))
 		{
 			string path = input.Substring(3).Trim();
@@ -23,11 +25,9 @@
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-		// Handle format flag extraction
 		string? formatFlag = parts.FirstOrDefault(p =>
 			p == "-png" || p == "-jpg" || p == "-jpeg" || p == "-webp");
 
-		// Handle -ca (convert all) command when in a directory
 		if (parts.Contains("-ca"))
 		{
 			return new Command(Constants.Commands.ConvertAll,
@@ -35,14 +35,12 @@
 				MapFormatFlag(formatFlag));
 		}
 
-		// Handle single file or directory conversion
 		var potentialPaths = parts.Where(p => !p.StartsWith("-")).ToList();
 		foreach (var potentialPath in potentialPaths)
 		{
 			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), potentialPath);
 			string[] checkPaths = [potentialPath, relativePath];
 
-			// Check if it's a directory
 			string? resolvedDirectoryPath = checkPaths.FirstOrDefault(Directory.Exists);
 			if (resolvedDirectoryPath != null)
 			{
@@ -51,7 +49,6 @@
 					MapFormatFlag(formatFlag));
 			}
 
-			// Check if it's a file
 			string? resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
 			if (resolvedFilePath != null)
 			{
