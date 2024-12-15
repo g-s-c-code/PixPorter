@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.NetworkInformation;
+using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
@@ -55,20 +56,24 @@ public static class UI
 		{
 		BuildSection("Usage Quick Guide", new[]
 		{
-			("[rosybrown]Drag & Drop[/]", "Drag an image, press [[ENTER]] to convert."),
-			("[rosybrown]Navigation[/]", "Use 'cd [[path]]' to navigate to a folder. Convert all with '-ca'."),
-			("[rosybrown]Conversion Flags[/]",
-				"[rosybrown]-png[/]: Convert to PNG\n[rosybrown]-jpg[/]: Convert to JPG\n[rosybrown]-webp[/]: Convert to WebP\n[rosybrown]-ca[/]: Convert all files in current directory")
+			("[indianred bold]DRAG & DROP[/]", "\n- Drag an image to this window and press '[steelblue][[ENTER]][/]' to convert.\n"),
+			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all with '[steelblue]-ca[/]'."),
 		}),
-		BuildSection("Quick Commands", new[]
+		BuildSection("Commands", new[]
 		{
-			("[rosybrown]'cd [[path]]'[/]", "Change directory"),
-			("[rosybrown]'q'[/]", "Exit application"),
-			("[rosybrown]'help'[/]", "Show detailed instructions")
+			("[steelblue]cd [[path]][/]", "- Change directory"),
+			("[steelblue]q[/]        ", "- Exit application"),
+			("[steelblue]-ca[/]      ", "- Convert all images in the [lightskyblue1 bold]current directory[/]")
+		}),
+		BuildSection("Conversion Flags", new[]
+		{
+			("[steelblue]-png[/]     ", "- Convert to PNG"),
+			("[steelblue]-jpg[/]     ", "- Convert to JPG"),
+			("[steelblue]-webp[/]    ", "- Convert to WebP"),
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
 			.Where(c => c.Key != Constants.FileFormats.Jpeg)
-			.Select(c => (c.Key.ToString(), $"-> {c.Value}"))
+			.Select(c => ($"[indianred]{c.Key}[/]"	, $"-> [indianred]{c.Value}[/]"))
 			.ToArray())
 	};
 
@@ -87,7 +92,7 @@ public static class UI
 
 		foreach (var (key, value) in items)
 		{
-			sectionContent.AppendLine($"[grey85]{key}[/]: {value}");
+			sectionContent.AppendLine($"[white]{key}[/] {value}");
 		}
 
 		return new Markup(sectionContent.ToString());
@@ -175,21 +180,21 @@ public static class UI
 "- Format flags are optional. Default conversion mappings are pre-configured (see below).",
 $"Default mappings: {string.Join(" | ", Constants.DefaultConversions.Select(c => $"[steelblue]{c.Key}[/] -> [steelblue]{c.Value}[/]"))}",
 "",
-"[rosybrown bold]DRAG & DROP[/]:",
+"[indianred bold]DRAG & DROP[/]:",
 "- Drag a file or folder into the PixPorter window. Add an optional format flag if desired.",
-"   [bold]EXAMPLE: 'my_photo.png' + [[ENTER]] -> Converts to the default format (e.g., 'my_photo.webp').[/]",
-"   [bold]EXAMPLE: 'my_photo.png -jpg' + [[ENTER]] -> Converts to JPG (e.g., 'my_photo.jpg').[/]",
+"   [bold]EXAMPLE: 'my_photo.png' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., 'my_photo.webp').[/]",
+"   [bold]EXAMPLE: 'my_photo.png -jpg' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., 'my_photo.jpg').[/]",
 "",
-"[rosybrown bold]DIRECT FILE/FOLDER CONVERSION[/]:",
-"- Enter a full file path or a folder path (and an optional format flat) + [[ENTER]] for automatic conversion.",
-"   [bold]EXAMPLE: 'C:\\Users\\Pictures -webp' + [[ENTER]] -> Converts all images in the folder to WebP.[/]",
+"[indianred bold]DIRECT FILE/FOLDER CONVERSION[/]:",
+"- Enter a full file path or a folder path (and an optional format flat) + '[steelblue][[ENTER]][/]' for automatic conversion.",
+"   [bold]EXAMPLE: 'C:\\Users\\Pictures -webp' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.[/]",
 "",
-"[rosybrown bold]CURRENT DIRECTORY CONVERSION[/]:",
+"[indianred bold]CURRENT DIRECTORY CONVERSION[/]:",
 "- Use the command line to navigate to a directory and perform conversions.",
 "- 'cd [[path]]' -> Navigate to the desired directory.",
 "- '-ca' -> Converts all images in the current directory.",
-"   [bold]EXAMPLE: 'cd C:\\Users\\Photos' + [[ENTER]] -> Navigate to the directory.[/]",
-"   [bold]EXAMPLE: '-ca -jpg' + [[ENTER]] -> Converts all images in the current directory to JPG.[/]",
+"   [bold]EXAMPLE: 'cd C:\\Users\\Photos' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.[/]",
+"   [bold]EXAMPLE: '-ca -jpg' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.[/]",
 "",
 "[lightskyblue1 underline bold]CONVERSION FLAGS:[/]",
 "'-png': Convert to PNG",
