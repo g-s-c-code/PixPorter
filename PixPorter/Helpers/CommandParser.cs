@@ -28,7 +28,7 @@
 		string? formatFlag = parts.FirstOrDefault(p =>
 			p == "-png" || p == "-jpg" || p == "-jpeg" || p == "-webp");
 
-		if (parts.Contains("-ca"))
+		if (parts.Contains("ca"))
 		{
 			return new Command(Constants.ConvertAll,
 				Array.Empty<string>(),

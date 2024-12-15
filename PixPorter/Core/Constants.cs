@@ -1,8 +1,8 @@
 ﻿public static class Constants
 {
 	public const string SingleQuotationMark = "\"";
-	public const string ConvertFile = "-cf";
-	public const string ConvertAll = "-ca";
+	public const string ConvertFile = "cf";
+	public const string ConvertAll = "ca";
 	public const string ChangeDirectory = "cd ";
 	public const string Exit = "exit";
 	public const string Q = "q";

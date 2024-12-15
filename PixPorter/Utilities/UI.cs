@@ -57,14 +57,14 @@ public static class UI
 		BuildSection("Usage Quick Guide", new[]
 		{
 			("[indianred bold]DRAG & DROP[/]", "\n- Drag an image to this window and press '[steelblue][[ENTER]][/]' to convert.\n"),
-			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all with '[steelblue]-ca[/]'."),
+			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all with '[steelblue]ca[/]'."),
 		}),
 		BuildSection("Commands", new[]
 		{
 			("[steelblue]cd [[path]][/]", "- Change directory"),
 			("[steelblue]q[/]        ", "- Exit application"),
 			("[steelblue]help[/]     ", "- Open the detailed instructions menu"),
-			("[steelblue]-ca[/]      ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]")
+			("[steelblue]ca[/]      ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]")
 		}),
 		BuildSection("Conversion Flags", new[]
 		{
@@ -189,9 +189,9 @@ public static class UI
 			{
 				("Use the command line to navigate to a directory and perform conversions.", ""),
 				("[steelblue]cd [[path]][/]   - Navigate to the desired directory.", ""),
-				("[steelblue]-ca[/]         - Converts all images in the current directory.", ""),
+				("[steelblue]ca[/]         - Converts all images in the current directory.", ""),
 				("[indianred]EXAMPLE:[/] '[steelblue]cd C:\\Users\\Photos[/]' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]-ca -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
+				("[indianred]EXAMPLE:[/] '[steelblue]ca -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
 			}),
 			BuildSection("How to Use", new[]
 			{
@@ -203,7 +203,7 @@ public static class UI
 				("[steelblue]-png[/]   ", "- Convert to PNG"),
 				("[steelblue]-jpg[/]   ", "- Convert to JPG"),
 				("[steelblue]-webp[/]  ", "- Convert to WebP"),
-				("[steelblue]-ca[/]    ", "- Convert all image files in the current directory"),
+				("[steelblue]ca[/]    ", "- Convert all image files in the current directory"),
 			}),
 		};
 	}
