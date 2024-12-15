@@ -2,16 +2,19 @@
 {
 	public Command Parse(string input)
 	{
+		// Exit command
 		if (input == "exit" || input == "q" || input == "quit")
 		{
 			return new Command(Constants.Commands.Exit, []);
 		}
 
+		// Help command
 		if (input == "help")
 		{
 			return new Command(Constants.Commands.Help, []);
 		}
 
+		// Change directory command
 		if (input.StartsWith("cd "))
 		{
 			string path = input.Substring(3).Trim();
@@ -20,44 +23,42 @@
 
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-		// Handle -ca (convert all)
-		if (parts.Contains("-ca"))
-		{
-			string? targetFormat = parts.FirstOrDefault(p =>
-				p == "-png" || p == "-jpg" || p == "-jpeg" || p == "-webp");
-
-			return new Command(Constants.Commands.ConvertAll,
-				Array.Empty<string>(),
-				MapFormatFlag(targetFormat));
-		}
-
-		// Handle single file conversion
-		var formatFlag = parts.FirstOrDefault(p =>
+		// Handle format flag extraction
+		string? formatFlag = parts.FirstOrDefault(p =>
 			p == "-png" || p == "-jpg" || p == "-jpeg" || p == "-webp");
 
-		var potentialFiles = parts.Where(p => !p.StartsWith("-")).ToList();
-		string? resolvedFilePath = null;
-
-		foreach (var potentialFile in potentialFiles)
+		// Handle -ca (convert all) command when in a directory
+		if (parts.Contains("-ca"))
 		{
-			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), potentialFile);
-
-			string[] checkPaths = [potentialFile, relativePath];
-
-			resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
-
-			if (resolvedFilePath != null)
-			{
-				break;
-			}
+			return new Command(Constants.Commands.ConvertAll,
+				Array.Empty<string>(),
+				MapFormatFlag(formatFlag));
 		}
 
-		// Single file conversion
-		if (resolvedFilePath != null)
+		// Handle single file or directory conversion
+		var potentialPaths = parts.Where(p => !p.StartsWith("-")).ToList();
+		foreach (var potentialPath in potentialPaths)
 		{
-			return new Command(Constants.Commands.ConvertFile,
-				[resolvedFilePath],
-				MapFormatFlag(formatFlag));
+			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), potentialPath);
+			string[] checkPaths = [potentialPath, relativePath];
+
+			// Check if it's a directory
+			string? resolvedDirectoryPath = checkPaths.FirstOrDefault(Directory.Exists);
+			if (resolvedDirectoryPath != null)
+			{
+				return new Command(Constants.Commands.ConvertAll,
+					[resolvedDirectoryPath],
+					MapFormatFlag(formatFlag));
+			}
+
+			// Check if it's a file
+			string? resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
+			if (resolvedFilePath != null)
+			{
+				return new Command(Constants.Commands.ConvertFile,
+					[resolvedFilePath],
+					MapFormatFlag(formatFlag));
+			}
 		}
 
 		throw new CommandException("Invalid command or path.");
