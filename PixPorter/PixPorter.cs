@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-public class PixPorter
+﻿public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
 
@@ -21,7 +19,7 @@ public class PixPorter
 			UI.RenderUI(DirectoryUtility.GetDirectories(),
 						DirectoryUtility.GetImageFiles());
 
-			var input = UI.ReadLine("Enter command:");
+			var input = UI.ReadLine("[steelblue bold]Enter command:[/]");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

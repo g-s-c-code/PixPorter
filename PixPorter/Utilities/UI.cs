@@ -56,21 +56,21 @@ public static class UI
 		{
 		BuildSection("Usage Quick Guide", new[]
 		{
-			("[indianred bold]DRAG & DROP[/]", "\n- Drag an image to this window and press '[steelblue][[ENTER]][/]' to convert.\n"),
-			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all with '[steelblue]ca[/]'."),
+			("[indianred bold]DRAG & DROP[/]", "\n- Drag and drop an image to this window and press '[steelblue][[ENTER]][/]' to convert it. Add a format flag to specify format.\n"),
+			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all viable images with '[steelblue]--ca[/]'."),
 		}),
 		BuildSection("Commands", new[]
 		{
+			("[steelblue]--ca[/]       ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]"),
 			("[steelblue]cd [[path]][/]", "- Change directory"),
-			("[steelblue]q[/]        ", "- Exit application"),
 			("[steelblue]help[/]     ", "- Open the detailed instructions menu"),
-			("[steelblue]ca[/]      ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]")
+			("[steelblue]q[/]        ", "- Exit application"),
 		}),
-		BuildSection("Conversion Flags", new[]
+		BuildSection("Conversion Format Flags", new[]
 		{
-			("[steelblue]-png[/]     ", "- Convert to PNG"),
-			("[steelblue]-jpg[/]     ", "- Convert to JPG"),
-			("[steelblue]-webp[/]    ", "- Convert to WebP"),
+			("[steelblue]--png[/]     ", "- Convert to PNG"),
+			("[steelblue]--jpg[/]     ", "- Convert to JPG"),
+			("[steelblue]--webp[/]    ", "- Convert to WebP"),
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
 			.Where(c => c.Key != Constants.JpegFileFormat)
@@ -178,20 +178,20 @@ public static class UI
 			{
 				("Drag a file or folder into the PixPorter window. Add an optional format flag if desired.", ""),
 				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png[/]' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., '[steelblue]my_photo.webp[/]').", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., '[steelblue]my_photo.jpg[/]').", "")
+				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., '[steelblue]my_photo.jpg[/]').", "")
 			}),
 			BuildSection("Direct File/Folder Conversion", new[]
 			{
 				("Enter a full file path or a folder path (and an optional format flag) + '[steelblue][[ENTER]][/]' for automatic conversion.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]C:\\Users\\Pictures -webp[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.", "")
+				("[indianred]EXAMPLE:[/] '[steelblue]C:\\Users\\Pictures --webp[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.", "")
 			}),
 			BuildSection("Current Directory Conversion", new[]
 			{
 				("Use the command line to navigate to a directory and perform conversions.", ""),
 				("[steelblue]cd [[path]][/]   - Navigate to the desired directory.", ""),
-				("[steelblue]ca[/]         - Converts all images in the current directory.", ""),
+				("[steelblue]--ca[/]         - Converts all images in the current directory.", ""),
 				("[indianred]EXAMPLE:[/] '[steelblue]cd C:\\Users\\Photos[/]' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]ca -jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
+				("[indianred]EXAMPLE:[/] '[steelblue]--ca --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
 			}),
 			BuildSection("How to Use", new[]
 			{
@@ -200,10 +200,10 @@ public static class UI
 			}),
 			BuildSection("Flags", new[]
 			{
-				("[steelblue]-png[/]   ", "- Convert to PNG"),
-				("[steelblue]-jpg[/]   ", "- Convert to JPG"),
-				("[steelblue]-webp[/]  ", "- Convert to WebP"),
-				("[steelblue]ca[/]    ", "- Convert all image files in the current directory"),
+				("[steelblue]--png[/]   ", "- Convert to PNG"),
+				("[steelblue]--jpg[/]   ", "- Convert to JPG"),
+				("[steelblue]--webp[/]  ", "- Convert to WebP"),
+				("[steelblue]--ca[/]    ", "- Convert all image files in the current directory"),
 			}),
 		};
 	}
