@@ -105,7 +105,7 @@ public static class UI
 			.RootColor(Color.White)
 			.SeparatorColor(Color.RosyBrown)
 			.StemColor(Color.White)
-			.LeafColor(Color.LightSkyBlue1);
+			.LeafColor(Color.White);
 
 		return new Panel(currentDirectory)
 		{
@@ -132,7 +132,7 @@ public static class UI
 
 	private static IRenderable BuildTree(string header, IEnumerable<string> items)
 	{
-		var tree = new Tree(header)
+		var tree = new Tree(new Markup(header, Color.White))
 		{
 			Style = new Style(foreground: Color.RosyBrown)
 		};
@@ -174,8 +174,6 @@ public static class UI
 	{
 		return new List<IRenderable>
 		{
-
-
 			BuildSection("Drag & Drop", new[]
 			{
 				("Drag a file or folder into the PixPorter window. Add an optional format flag if desired.", ""),

@@ -1,4 +1,6 @@
-﻿public class CommandProcessor(CommandParser commandParser, CommandService commandService)
+﻿using Spectre.Console;
+
+public class CommandProcessor(CommandParser commandParser, CommandService commandService)
 {
 	private readonly CommandParser _commandParser = commandParser;
 	private readonly CommandService _commandExecutor = commandService;
@@ -12,11 +14,11 @@
 		}
 		catch (CommandException ex)
 		{
-			UI.WriteAndWait($"Command Error: {ex.Message}");
+			UI.WriteAndWait($"Command Error: {ex.Message}", Color.RosyBrown);
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Unexpected Error: {ex.Message}");
+			UI.WriteAndWait($"Unexpected Error: {ex.Message}", Color.RosyBrown);
 		}
 	}
 }
