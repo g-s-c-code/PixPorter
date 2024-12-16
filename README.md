@@ -10,6 +10,12 @@ PixPorter is a versatile image format converter built on .NET 8, designed to sim
 - **Drag and Drop**: Instantly convert images via drag-and-drop functionality.
 - **Supported Formats**: PNG, JPG, JPEG, WebP.
 
+- ## Planned Features
+PixPorter is actively evolving to meet diverse user needs. Future updates aim to include:
+- **Support for Additional Formats**: Adding compatibility for image formats such as TIFF, BMP, and GIF.
+- **Image Compression**: Introducing options for configurable compression levels to optimize file sizes while maintaining quality.
+- **Enhanced Metadata Handling**: Providing options to preserve or strip metadata during conversion.
+
 ## Getting Started
 
 ### Download and Run
