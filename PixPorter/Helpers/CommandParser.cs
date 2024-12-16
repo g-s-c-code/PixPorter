@@ -23,7 +23,7 @@
 			return new Command(Constants.ChangeDirectory, [path]);
 		}
 
-		string[] validExtensions = { ".png", ".jpg", ".jpeg", ".webp" };
+		string[] validExtensions = { ".png", ".jpg", ".jpeg", ".webp", ".gif", ".tiff", ".bmp" };
 		string? filePath = ExtractFilePath(input, validExtensions);
 
 		if (filePath != null)
@@ -37,7 +37,7 @@
 
 			var remainingParts = remainingInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			string? formatFlag = remainingParts.FirstOrDefault(p =>
-				p == "--png" || p == "--jpg" || p == "--jpeg" || p == "--webp");
+				p == "--png" || p == "--jpg" || p == "--jpeg" || p == "--webp" || p == "--gif" || p == "--tiff" || p == "--bmp");
 
 			if (remainingParts.Contains("--ca"))
 			{
@@ -48,7 +48,7 @@
 		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
 		string? formatFlagGeneral = parts.FirstOrDefault(p =>
-			p == "--png" || p == "--jpg" || p == "--jpeg" || p == "--webp");
+			p == "--png" || p == "--jpg" || p == "--jpeg" || p == "--webp" || p == "--gif" || p == "--tiff" || p == "--bmp");
 
 		if (parts.Contains("--ca"))
 		{
@@ -103,6 +103,9 @@
 			Constants.JpgFlag => Constants.JpgFileFormat,
 			Constants.JpegFlag => Constants.JpegFileFormat,
 			Constants.WebpFlag => Constants.WebpFileFormat,
+			Constants.GifFlag => Constants.GifFileFormat,
+			Constants.TiffFlag => Constants.TiffFileFormat,
+			Constants.BmpFlag => Constants.BmpFileFormat,
 			_ => null
 		};
 	}

@@ -71,6 +71,9 @@ public static class UI
 			("[steelblue]--png[/]    ", "- Convert to PNG"),
 			("[steelblue]--jpg[/]    ", "- Convert to JPG"),
 			("[steelblue]--webp[/]   ", "- Convert to WebP"),
+			("[steelblue]--gif[/]    ", "- Convert to GIF"),
+			("[steelblue]--tiff[/]   ", "- Convert to TIFF"),
+			("[steelblue]--bmp[/]    ", "- Convert to BMP"),
 		}),
 		BuildSection("Default Conversion Formats", Constants.DefaultConversions
 			.Where(c => c.Key != Constants.JpegFileFormat)
@@ -203,6 +206,9 @@ public static class UI
 				("[steelblue]--png[/]   ", "- Convert to PNG"),
 				("[steelblue]--jpg[/]   ", "- Convert to JPG"),
 				("[steelblue]--webp[/]  ", "- Convert to WebP"),
+				("[steelblue]--gif[/]   ", "- Convert to GIF"),
+				("[steelblue]--tiff[/]  ", "- Convert to TIFF"),
+				("[steelblue]--bmp[/]   ", "- Convert to BMP"),
 				("[steelblue]--ca[/]    ", "- Convert all image files in the current directory"),
 			}),
 		};

@@ -12,14 +12,20 @@
 	public const string JpgFlag = "--jpg";
 	public const string JpegFlag = "--jpeg";
 	public const string WebpFlag = "--webp";
+	public const string GifFlag = "--gif";
+	public const string TiffFlag = "--tiff";
+	public const string BmpFlag = "--bmp";
 	public const string PngFileFormat = ".png";
 	public const string JpgFileFormat = ".jpg";
 	public const string JpegFileFormat = ".jpeg";
 	public const string WebpFileFormat = ".webp";
+	public const string GifFileFormat = ".gif";
+	public const string TiffFileFormat = ".tiff";
+	public const string BmpFileFormat = ".bmp";
 
 	public static readonly HashSet<string> SupportedFileFormats = new(StringComparer.OrdinalIgnoreCase)
 	{
-		PngFileFormat, JpgFileFormat, JpegFileFormat, WebpFileFormat
+		PngFileFormat, JpgFileFormat, JpegFileFormat, WebpFileFormat, GifFileFormat, TiffFileFormat, BmpFileFormat
 	};
 
 	public static Dictionary<string, string> DefaultConversions { get; } = new()
@@ -27,6 +33,9 @@
 		{ PngFileFormat, WebpFileFormat },
 		{ JpgFileFormat, WebpFileFormat },
 		{ JpegFileFormat, WebpFileFormat },
-		{ WebpFileFormat, PngFileFormat }
+		{ WebpFileFormat, PngFileFormat },
+		{ GifFileFormat, PngFileFormat },
+		{ TiffFileFormat, PngFileFormat },
+		{ BmpFileFormat, PngFileFormat }
 	};
 }

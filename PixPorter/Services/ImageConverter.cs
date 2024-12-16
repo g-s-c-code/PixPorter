@@ -4,6 +4,9 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using Spectre.Console;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Tiff;
 
 public class ImageConverter
 {
@@ -12,7 +15,10 @@ public class ImageConverter
 		{ Constants.WebpFileFormat, new WebpEncoder() },
 		{ Constants.PngFileFormat, new PngEncoder() },
 		{ Constants.JpegFileFormat, new JpegEncoder() },
-		{ Constants.JpgFileFormat, new JpegEncoder() }
+		{ Constants.JpgFileFormat, new JpegEncoder() },
+		{ Constants.GifFileFormat, new GifEncoder() },
+		{ Constants.TiffFileFormat, new TiffEncoder() },
+		{ Constants.BmpFileFormat, new BmpEncoder() }
 	};
 
 	public void ConvertFile(string filePath, string? targetFormat = null)
