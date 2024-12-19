@@ -1,132 +1,134 @@
-﻿//public class CommandParser
-//{
-//	public Command Parse(string input)
-//	{
-//		if (input.StartsWith(Constants.SingleQuotationMark) && input.EndsWith(Constants.SingleQuotationMark))
-//		{
-//			input = input[1..^1];
-//		}
+﻿public class CommandParser
+{
+	public Command ParseInput(string input)
+	{
+		input = input.Trim().Replace(Constants.QuotationMark, string.Empty);
 
-//		if (input == Constants.Exit || input == Constants.Q || input == Constants.Quit)
-//		{
-//			return new Command(Constants.Quit, []);
-//		}
+		if (IsSpecialCommand(input, out Command? specialCommand))
+		{
+			return specialCommand!;
+		}
 
-//		if (input == Constants.Help)
-//		{
-//			return new Command(Constants.Help, []);
-//		}
+		if (input.StartsWith(Constants.ChangeDirectory))
+		{
+			string path = input[Constants.ChangeDirectory.Length..].Trim();
+			return new Command(Constants.ChangeDirectory, [path]);
+		}
 
-//		if (input.StartsWith(Constants.ChangeDirectory))
-//		{
-//			string path = input.Substring(Constants.ChangeDirectory.Length).Trim();
-//			return new Command(Constants.ChangeDirectory, [path]);
-//		}
+		return ParseConversionCommand(input);
+	}
 
-//		string[] validExtensions =
-//		[
-//			Constants.PngFileFormat,
-//			Constants.JpgFileFormat,
-//			Constants.JpegFileFormat,
-//			Constants.WebpFileFormat,
-//			Constants.GifFileFormat,
-//			Constants.TiffFileFormat,
-//			Constants.BmpFileFormat
-//		];
-//		string? filePath = ExtractFilePath(input, validExtensions);
+	private bool IsSpecialCommand(string input, out Command? command)
+	{
+		command = input switch
+		{
+			Constants.Q or Constants.Quit or Constants.Exit => new Command(Constants.Quit, []),
+			Constants.Help => new Command(Constants.Help, []),
+			_ => null
+		};
 
-//		if (filePath != null)
-//		{
-//			string remainingInput = input.Substring(input.IndexOf(filePath) + filePath.Length).Trim();
+		return command != null;
+	}
 
-//			if (string.IsNullOrWhiteSpace(remainingInput))
-//			{
-//				return new Command(Constants.ConvertFile, [filePath], null);
-//			}
+	private Command ParseConversionCommand(string input)
+	{
+		string? filePath = ExtractFilePath(input, [.. Constants.SupportedFileFormats]);
+		string remainingInput;
 
-//			var remainingParts = remainingInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-//			string? formatFlag = remainingParts.FirstOrDefault(p =>
-//				p is Constants.PngFlag
-//					or Constants.JpgFlag
-//					or Constants.JpegFlag
-//					or Constants.WebpFlag
-//					or Constants.WebpFlag
-//					or Constants.TiffFlag
-//					or Constants.BmpFlag);
-//			if (remainingParts.Contains(Constants.ConvertAll))
-//			{
-//				return new Command(Constants.ConvertAll, [filePath], MapFormatFlag(formatFlag));
-//			}
-//		}
+		if (filePath != null)
+		{
+			remainingInput = input[(input.IndexOf(filePath) + filePath.Length)..].Trim();
+			var parts = remainingInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			string? formatFlag = ExtractFormatFlag(parts);
 
-//		var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			bool convertAll = parts.Contains(Constants.ConvertAll);
+			string commandType = convertAll ? Constants.ConvertAll : Constants.ConvertFile;
+			return new Command(commandType, [filePath], MapFormatFlag(formatFlag));
+		}
 
-//		string? formatFlagGeneral = parts.FirstOrDefault(p =>
-//				p is Constants.PngFlag
-//					or Constants.JpgFlag
-//					or Constants.JpegFlag
-//					or Constants.WebpFlag
-//					or Constants.WebpFlag
-//					or Constants.TiffFlag
-//					or Constants.BmpFlag);
+		var allParts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-//		if (parts.Contains(Constants.ConvertAll))
-//		{
-//			return new Command(Constants.ConvertAll, [], MapFormatFlag(formatFlagGeneral));
-//		}
+		if (allParts.Contains(Constants.ConvertAll))
+		{
+			string? formatFlag = ExtractFormatFlag(allParts);
+			return new Command(Constants.ConvertAll, [Directory.GetCurrentDirectory()], MapFormatFlag(formatFlag));
+		}
 
-//		var potentialPaths = parts.Where(p => !p.StartsWith("-")).ToList();
-//		foreach (var potentialPath in potentialPaths)
-//		{
-//			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), potentialPath);
-//			string[] checkPaths = { potentialPath, relativePath };
+		string? formatFlag2 = ExtractFormatFlag(allParts);
+		return ParseDirectoryConversion(allParts, formatFlag2);
+	}
 
-//			string? resolvedDirectoryPath = checkPaths.FirstOrDefault(Directory.Exists);
-//			if (resolvedDirectoryPath != null)
-//			{
-//				return new Command(Constants.ConvertAll,
-//					[resolvedDirectoryPath],
-//					MapFormatFlag(formatFlagGeneral));
-//			}
+	private Command ParseDirectoryConversion(string[] parts, string? formatFlag)
+	{
+		var potentialPaths = parts.Where(p => !p.StartsWith("-")).ToList();
 
-//			string? resolvedFilePath = checkPaths.FirstOrDefault(File.Exists);
-//			if (resolvedFilePath != null)
-//			{
-//				return new Command(Constants.ConvertFile,
-//					[resolvedFilePath],
-//					MapFormatFlag(formatFlagGeneral));
-//			}
-//		}
+		if (!potentialPaths.Any() && formatFlag != null)
+		{
+			return new Command(Constants.ConvertAll,
+				[Directory.GetCurrentDirectory()],
+				MapFormatFlag(formatFlag));
+		}
 
-//		throw new CommandException("Invalid command or path.");
-//	}
+		foreach (var path in potentialPaths)
+		{
+			string relativePath = Path.Combine(Directory.GetCurrentDirectory(), path);
 
-//	private static string? ExtractFilePath(string input, string[] validExtensions)
-//	{
-//		foreach (string ext in validExtensions)
-//		{
-//			int extIndex = input.IndexOf(ext, StringComparison.OrdinalIgnoreCase);
-//			if (extIndex > 0)
-//			{
-//				int endIndex = extIndex + ext.Length;
-//				return input[..endIndex].Trim();
-//			}
-//		}
-//		return null;
-//	}
+			if (Directory.Exists(path))
+			{
+				return new Command(Constants.ConvertAll, [path], MapFormatFlag(formatFlag));
+			}
+			if (Directory.Exists(relativePath))
+			{
+				return new Command(Constants.ConvertAll, [relativePath], MapFormatFlag(formatFlag));
+			}
+			if (File.Exists(path))
+			{
+				return new Command(Constants.ConvertFile, [path], MapFormatFlag(formatFlag));
+			}
+			if (File.Exists(relativePath))
+			{
+				return new Command(Constants.ConvertFile, [relativePath], MapFormatFlag(formatFlag));
+			}
+		}
 
-//	private static string? MapFormatFlag(string? flag)
-//	{
-//		return flag switch
-//		{
-//			Constants.PngFlag => Constants.PngFileFormat,
-//			Constants.JpgFlag => Constants.JpgFileFormat,
-//			Constants.JpegFlag => Constants.JpegFileFormat,
-//			Constants.WebpFlag => Constants.WebpFileFormat,
-//			Constants.GifFlag => Constants.GifFileFormat,
-//			Constants.TiffFlag => Constants.TiffFileFormat,
-//			Constants.BmpFlag => Constants.BmpFileFormat,
-//			_ => null
-//		};
-//	}
-//}
+		throw new CommandException("Invalid command or path.");
+	}
+
+	private string? ExtractFormatFlag(string[] parts) =>
+		parts.FirstOrDefault(p => IsFormatFlag(p));
+
+	private bool IsFormatFlag(string flag) =>
+		flag is Constants.PngFlag
+			or Constants.JpgFlag
+			or Constants.JpegFlag
+			or Constants.WebpFlag
+			or Constants.GifFlag
+			or Constants.TiffFlag
+			or Constants.BmpFlag;
+
+	private string? ExtractFilePath(string input, string[] validExtensions)
+	{
+		return validExtensions
+			.Select(ext => new
+			{
+				Extension = ext,
+				Index = input.IndexOf(ext, StringComparison.OrdinalIgnoreCase)
+			})
+			.Where(x => x.Index > 0)
+			.Select(x => input[..(x.Index + x.Extension.Length)].Trim())
+			.FirstOrDefault();
+	}
+
+	private string? MapFormatFlag(string? flag) =>
+		flag switch
+		{
+			Constants.PngFlag => Constants.PngFileFormat,
+			Constants.JpgFlag => Constants.JpgFileFormat,
+			Constants.JpegFlag => Constants.JpegFileFormat,
+			Constants.WebpFlag => Constants.WebpFileFormat,
+			Constants.GifFlag => Constants.GifFileFormat,
+			Constants.TiffFlag => Constants.TiffFileFormat,
+			Constants.BmpFlag => Constants.BmpFileFormat,
+			_ => null
+		};
+}

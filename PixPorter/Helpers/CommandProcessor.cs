@@ -9,7 +9,7 @@ public class CommandProcessor(CommandParser commandParser, CommandService comman
 	{
 		try
 		{
-			var command = _commandParser.Parse(input.ToLower());
+			var command = _commandParser.ParseInput(input.ToLower());
 			_commandExecutor.ExecuteCommand(command);
 		}
 		catch (CommandException ex)
