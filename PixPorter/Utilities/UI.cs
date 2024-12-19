@@ -54,32 +54,27 @@ public static class UI
 
 		var sections = new[]
 		{
-		BuildSection("Usage Quick Guide", new[]
+		BuildSection("[lightskyblue1 underline bold]Usage Quick Guide[/]", new[]
 		{
 			("[indianred bold]DRAG & DROP[/]", "\n- Drag and drop an image to this window and press '[steelblue][[ENTER]][/]' to convert it. Add a format flag to specify format.\n"),
 			("[indianred bold]NAVIGATION[/]", "\n- Use '[steelblue]cd [[path]][/]' to navigate to a folder containing images. Convert all viable images with '[steelblue]--ca[/]'."),
 		}),
-		BuildSection("Commands", new[]
+		BuildSection("[lightskyblue1 underline bold]Commands[/]", new[]
 		{
-			("[steelblue]--ca[/]     ", "- Convert all images in the [lightskyblue1 bold]CURRENT DIRECTORY[/]"),
+			("[steelblue]--ca[/]     ", "- Convert all images in the [lightskyblue1 bold]current directory[/]"),
 			("[steelblue]cd [[path]][/]", "- Change directory"),
 			("[steelblue]help[/]     ", "- Open the detailed instructions menu"),
 			("[steelblue]q[/]        ", "- Exit application"),
 		}),
-		BuildSection("Conversion Format Flags", new[]
+		BuildSection("[lightskyblue1 underline bold]Conversion Format Flags[/]          [lightskyblue1 underline bold]Default Conversion Formats[/]", new[]
 		{
-			("[steelblue]--png[/]    ", "- Convert to PNG"),
-			("[steelblue]--jpg[/]    ", "- Convert to JPG"),
-			("[steelblue]--webp[/]   ", "- Convert to WebP"),
-			("[steelblue]--gif[/]    ", "- Convert to GIF"),
-			("[steelblue]--tiff[/]   ", "- Convert to TIFF"),
-			("[steelblue]--bmp[/]    ", "- Convert to BMP"),
-		}),
-		BuildSection("Default Conversion Formats", Constants.DefaultConversions
-			.Where(c => c.Key != Constants.JpegFileFormat)
-			.Select(c => ($"[indianred]{c.Key}[/]"  , $"-> [indianred]{c.Value}[/]"))
-			.ToArray()),
-		};
+			("[steelblue]--png[/]     - Convert to PNG", "      [indianred].png[/] -> [indianred].webp[/]"),
+			("[steelblue]--jpg[/]     - Convert to JPG", "      [indianred].jpg[/] -> [indianred].webp[/]"),
+			("[steelblue]--webp[/]    - Convert to WebP", "     [indianred].webp[/] -> [indianred].png[/]"),
+			("[steelblue]--gif[/]     - Convert to GIF", "      [indianred].gif[/] -> [indianred].png[/]"),
+			("[steelblue]--tiff[/]    - Convert to TIFF", "     [indianred].tiff[/] -> [indianred].png[/]"),
+			("[steelblue]--bmp[/]     - Convert to BMP", "      [indianred].bmp[/] -> [indianred].png[/]"),
+		})};
 
 		foreach (var section in sections)
 		{
@@ -92,7 +87,7 @@ public static class UI
 
 	private static IRenderable BuildSection(string title, (string Key, string Value)[] items)
 	{
-		var sectionContent = new StringBuilder().AppendLine($"[lightskyblue1 underline bold]{title.ToUpper()}[/]");
+		var sectionContent = new StringBuilder().AppendLine(title.ToUpper());
 
 		foreach (var (key, value) in items)
 		{
