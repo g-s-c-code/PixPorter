@@ -33,15 +33,15 @@ PixPorter provides source code that you can build and package into an executable
    ```
 
 3. **Publish the project to create a runnable executable**:
- - For **Windows**:
+- For **Windows**:
      ```bash
      dotnet publish -c Release -r win-x64 --self-contained
      ```
- - For **macOS**:
+- For **macOS**:
      ```bash
      dotnet publish -c Release -r osx-x64 --self-contained
      ```
- - For **Linux**:
+- For **Linux**:
      ```bash
      dotnet publish -c Release -r linux-x64 --self-contained
      ```
