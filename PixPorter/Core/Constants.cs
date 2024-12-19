@@ -1,6 +1,6 @@
 ﻿public static class Constants
 {
-	public const string SingleQuotationMark = "\"";
+	public const char QuotationMark = '"';
 	public const string ChangeDirectory = "cd ";
 	public const string Exit = "exit";
 	public const string Q = "q";
