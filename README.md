@@ -1,5 +1,7 @@
 # PixPorter - Image Format Converter
 
+![PixPorter Logo](https://raw.githubusercontent.com/g-s-c-code/PixPorter/refs/heads/master/pixporter.webp)
+
 ## Overview
 PixPorter is a versatile image format converter built on .NET 8, designed to simplify and streamline image conversions. It supports popular formats like PNG, JPG, JPEG, WebP, GIF, TIFF, and BMP, providing options for both individual and batch processing.
 
@@ -33,15 +35,15 @@ PixPorter provides source code that you can build and package into an executable
    ```
 
 3. **Publish the project to create a runnable executable**:
-- For **Windows**:
+   - For **Windows**:
      ```bash
      dotnet publish -c Release -r win-x64 --self-contained
      ```
-- For **macOS**:
+   - For **macOS**:
      ```bash
      dotnet publish -c Release -r osx-x64 --self-contained
      ```
-- For **Linux**:
+   - For **Linux**:
      ```bash
      dotnet publish -c Release -r linux-x64 --self-contained
      ```
@@ -70,17 +72,17 @@ When running PixPorter, the application launches an interactive prompt to naviga
 - **`q`**: Quit.
 
 #### Examples
-Convert all images in the **current directory** to the default format:
-```bash
---ca
-```
-Convert all images in the **current directory** to WebP:
+Convert all images in the current directory to WebP:
 ```bash
 --ca --webp
 ```
-Convert a single image to default format:
+Convert a single image to JPG:
 ```bash
-my_image.png
+my_image.png --jpg
+```
+Convert a single image to GIF:
+```bash
+my_image.png --gif
 ```
 Convert a single image to TIFF:
 ```bash
