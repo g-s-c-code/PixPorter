@@ -1,8 +1,1 @@
-﻿internal class Program
-{
-	static void Main(string[] args)
-	{
-		var pixPorter = new PixPorter();
-		pixPorter.Run();
-	}
-}
+﻿new PixPorter().Run();

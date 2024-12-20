@@ -3,7 +3,6 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using Spectre.Console;
 using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Tiff;
@@ -35,7 +34,7 @@ public class ImageConverter
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Conversion failed: {ex.Message}", Spectre.Console.Color.RosyBrown);
+			UI.WriteAndWait($"Conversion failed: {ex.Message}");
 		}
 	}
 
@@ -47,29 +46,11 @@ public class ImageConverter
 
 		if (files.Count == 0)
 		{
-			UI.WriteAndWait("No supported image files found in the directory.", Spectre.Console.Color.Yellow);
+			UI.DisplayErrorMessage("No supported image files found in the directory.");
 			return;
 		}
 
-		AnsiConsole.Progress()
-			.Start(ctx =>
-			{
-				var conversionTask = ctx.AddTask("[steelblue]Converting Images[/]", maxValue: files.Count);
-
-				foreach (var file in files)
-				{
-					try
-					{
-						conversionTask.Increment(1);
-						ConvertFile(file, targetFormat);
-					}
-					catch (Exception ex)
-					{
-						UI.WriteAndWait($"Conversion failed for {file}: {ex.Message}[/]", Spectre.Console.Color.RosyBrown);
-					}
-				}
-			});
-
+		UI.RenderProgress(files, targetFormat, ConvertFile);
 		UI.WriteAndWait("All supported files have been successfully processed.");
 	}
 

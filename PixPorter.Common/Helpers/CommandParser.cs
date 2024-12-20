@@ -2,7 +2,7 @@
 {
 	public Command ParseInput(string input)
 	{
-		input = input.Trim().Replace(Constants.QuotationMark, string.Empty);
+		input = input.Replace("\"", string.Empty).Trim();
 
 		if (IsSpecialCommand(input, out Command? specialCommand))
 		{

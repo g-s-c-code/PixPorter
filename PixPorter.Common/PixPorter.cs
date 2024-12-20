@@ -12,14 +12,14 @@
 
 	public void Run()
 	{
-		Console.Title = "PixPorter - Image Format Converter";
+		UI.DisplayTitle("PixPorter - Image Format Converter");
 
 		while (true)
 		{
 			UI.RenderUI(DirectoryUtility.GetDirectories(),
 						DirectoryUtility.GetImageFiles());
 
-			var input = UI.ReadLine("[steelblue bold]Enter command:[/]");
+			var input = UI.Read("[steelblue bold]Enter command:[/]");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

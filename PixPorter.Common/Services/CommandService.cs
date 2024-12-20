@@ -13,7 +13,7 @@ public class CommandService(ImageConverter converter)
 				break;
 			case Constants.Help:
 				UI.RenderUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles(), true);
-				UI.WriteAndWait("Press any key to return...", Color.SteelBlue);
+				UI.WriteAndWait("Press any key to return...");
 				break;
 			case Constants.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
@@ -26,7 +26,7 @@ public class CommandService(ImageConverter converter)
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.WriteAndWait("Unknown command.", Color.RosyBrown);
+				UI.DisplayErrorMessage("Unknown command.");
 				break;
 		}
 	}
@@ -35,7 +35,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			UI.WriteAndWait("Path cannot be empty. Usage: cd [[path]]", Color.RosyBrown);
+			UI.DisplayErrorMessage("Path cannot be empty. Usage: cd [[path]]");
 			return;
 		}
 
@@ -49,7 +49,7 @@ public class CommandService(ImageConverter converter)
 		}
 		else
 		{
-			UI.WriteAndWait($"Directory not found: {newPath}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Directory not found: {newPath}");
 		}
 	}
 
@@ -57,7 +57,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!File.Exists(path))
 		{
-			UI.WriteAndWait($"File not found: {path}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"File not found: {path}");
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Failed to convert file: {ex.Message}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Failed to convert file: {ex.Message}");
 		}
 	}
 
@@ -75,7 +75,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!Directory.Exists(path))
 		{
-			UI.WriteAndWait($"Directory not found: {path}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Directory not found: {path}");
 			return;
 		}
 
@@ -85,7 +85,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Failed to convert directory: {ex.Message}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Failed to convert directory: {ex.Message}");
 		}
 	}
 }

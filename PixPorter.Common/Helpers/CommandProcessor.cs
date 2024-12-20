@@ -14,11 +14,11 @@ public class CommandProcessor(CommandParser commandParser, CommandService comman
 		}
 		catch (CommandException ex)
 		{
-			UI.WriteAndWait($"Command Error: {ex.Message}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Unexpected Error: {ex.Message}", Color.RosyBrown);
+			UI.DisplayErrorMessage($"Unexpected Error: {ex.Message}");
 		}
 	}
 }
