@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using System.Net.NetworkInformation;
-using System.Text;
+﻿using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
@@ -25,7 +23,7 @@ public class UI : IUserInterace
 		AnsiConsole.Progress()
 			.Start(ctx =>
 			{
-				var conversionTask = ctx.AddTask("[steelblue]Converting Images[/]", maxValue: files.Count);
+				var conversionTask = ctx.AddTask("Converting Images", maxValue: files.Count);
 
 				foreach (var file in files)
 				{
@@ -251,7 +249,6 @@ public class UI : IUserInterace
 		};
 	}
 
-	// In ConsoleUI
 	public List<T> GetHelpDetails<T>()
 	{
 		if (typeof(T) != typeof(IRenderable))

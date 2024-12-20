@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-public class CommandProcessor(CommandParser commandParser, CommandService commandService, IUserInterace ui)
+﻿public class CommandProcessor(CommandParser commandParser, CommandService commandService, IUserInterace ui)
 {
 	private readonly CommandParser _commandParser = commandParser;
 	private readonly CommandService _commandExecutor = commandService;
