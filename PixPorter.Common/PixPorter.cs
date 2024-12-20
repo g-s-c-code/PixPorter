@@ -1,25 +1,27 @@
 ﻿public class PixPorter
 {
 	private readonly CommandProcessor _commandProcessor;
+	private readonly IUserInterace _ui;
 
-	public PixPorter()
+	public PixPorter(IUserInterace ui)
 	{
-		var imageConverter = new ImageConverter();
+		_ui = ui;
+		var imageConverter = new ImageConverter(_ui);
 		var commandParser = new CommandParser();
-		var commandService = new CommandService(imageConverter);
-		_commandProcessor = new CommandProcessor(commandParser, commandService);
+		var commandService = new CommandService(imageConverter, _ui);
+		_commandProcessor = new CommandProcessor(commandParser, commandService, _ui);
 	}
 
 	public void Run()
 	{
-		UI.DisplayTitle("PixPorter - Image Format Converter");
+		_ui.DisplayTitle("PixPorter - Image Format Converter");
 
 		while (true)
 		{
-			UI.RenderUI(DirectoryUtility.GetDirectories(),
+			_ui.RenderUI(DirectoryUtility.GetDirectories(),
 						DirectoryUtility.GetImageFiles());
 
-			var input = UI.Read("[steelblue bold]Enter command:[/]");
+			var input = _ui.Read("Enter command:");
 
 			if (string.IsNullOrWhiteSpace(input))
 				continue;

@@ -1,8 +1,7 @@
-﻿using System.Text;
-using Spectre.Console;
-public class CommandService(ImageConverter converter)
+﻿public class CommandService(ImageConverter converter, IUserInterace ui)
 {
 	private readonly ImageConverter _converter = converter;
+	private readonly IUserInterace _ui = ui;
 
 	public void ExecuteCommand(Command command)
 	{
@@ -12,8 +11,8 @@ public class CommandService(ImageConverter converter)
 				Environment.Exit(0);
 				break;
 			case Constants.Help:
-				UI.RenderUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles(), true);
-				UI.WriteAndWait("Press any key to return...");
+				_ui.RenderUI(DirectoryUtility.GetDirectories(), DirectoryUtility.GetImageFiles(), true);
+				_ui.WriteAndWait("Press any key to return...");
 				break;
 			case Constants.ChangeDirectory:
 				ChangeDirectory(command.Arguments.FirstOrDefault() ?? "");
@@ -26,7 +25,7 @@ public class CommandService(ImageConverter converter)
 				ConvertDirectory(command.Arguments.FirstOrDefault() ?? Directory.GetCurrentDirectory(), command.TargetFormat);
 				break;
 			default:
-				UI.DisplayErrorMessage("Unknown command.");
+				_ui.DisplayErrorMessage("Unknown command.");
 				break;
 		}
 	}
@@ -35,7 +34,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			UI.DisplayErrorMessage("Path cannot be empty. Usage: cd [[path]]");
+			_ui.DisplayErrorMessage("Path cannot be empty. Usage: cd [[path]]");
 			return;
 		}
 
@@ -49,7 +48,7 @@ public class CommandService(ImageConverter converter)
 		}
 		else
 		{
-			UI.DisplayErrorMessage($"Directory not found: {newPath}");
+			_ui.DisplayErrorMessage($"Directory not found: {newPath}");
 		}
 	}
 
@@ -57,7 +56,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!File.Exists(path))
 		{
-			UI.DisplayErrorMessage($"File not found: {path}");
+			_ui.DisplayErrorMessage($"File not found: {path}");
 			return;
 		}
 
@@ -67,7 +66,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.DisplayErrorMessage($"Failed to convert file: {ex.Message}");
+			_ui.DisplayErrorMessage($"Failed to convert file: {ex.Message}");
 		}
 	}
 
@@ -75,7 +74,7 @@ public class CommandService(ImageConverter converter)
 	{
 		if (!Directory.Exists(path))
 		{
-			UI.DisplayErrorMessage($"Directory not found: {path}");
+			_ui.DisplayErrorMessage($"Directory not found: {path}");
 			return;
 		}
 
@@ -85,7 +84,7 @@ public class CommandService(ImageConverter converter)
 		}
 		catch (Exception ex)
 		{
-			UI.DisplayErrorMessage($"Failed to convert directory: {ex.Message}");
+			_ui.DisplayErrorMessage($"Failed to convert directory: {ex.Message}");
 		}
 	}
 }

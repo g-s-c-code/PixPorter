@@ -9,6 +9,13 @@ using SixLabors.ImageSharp.Formats.Tiff;
 
 public class ImageConverter
 {
+	private readonly IUserInterace _ui;
+
+	public ImageConverter(IUserInterace ui)
+	{
+		_ui = ui;
+	}
+
 	private readonly Dictionary<string, IImageEncoder> _encoders = new()
 	{
 		{ Constants.WebpFileFormat, new WebpEncoder() },
@@ -30,11 +37,11 @@ public class ImageConverter
 		{
 			using var image = Image.Load(filePath);
 			image.Save(outputPath, GetEncoder(outputFormat));
-			UI.Write($"Converted: {filePath} -> {outputPath}", Spectre.Console.Color.SteelBlue);
+			_ui.Write($"Converted: {filePath} -> {outputPath}");
 		}
 		catch (Exception ex)
 		{
-			UI.WriteAndWait($"Conversion failed: {ex.Message}");
+			_ui.WriteAndWait($"Conversion failed: {ex.Message}");
 		}
 	}
 
@@ -46,12 +53,12 @@ public class ImageConverter
 
 		if (files.Count == 0)
 		{
-			UI.DisplayErrorMessage("No supported image files found in the directory.");
+			_ui.DisplayErrorMessage("No supported image files found in the directory.");
 			return;
 		}
 
-		UI.RenderProgress(files, targetFormat, ConvertFile);
-		UI.WriteAndWait("All supported files have been successfully processed.");
+		_ui.RenderProgress(files, targetFormat, ConvertFile);
+		_ui.WriteAndWait("All supported files have been successfully processed.");
 	}
 
 	private string DetermineOutputFormat(string inputExtension, string? targetFormat)

@@ -1,1 +1,2 @@
-﻿new PixPorter().Run();
+﻿UI ui = new();
+new PixPorter(ui).Run();

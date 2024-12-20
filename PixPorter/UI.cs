@@ -1,15 +1,16 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Diagnostics.Metrics;
+using System.Net.NetworkInformation;
 using System.Text;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-public static class UI
+public class UI : IUserInterace
 {
 	private const int LayoutWidth = 150;
 
 	#region Public Methods
 
-	public static void RenderUI(IEnumerable<string> directories, IEnumerable<string> files, bool displayHelp = false)
+	public void RenderUI(IEnumerable<string> directories, IEnumerable<string> files, bool displayHelp = false)
 	{
 		var leftPanel = InformationContentUI();
 		var rightPanel = DirectoryContentUI(CurrentDirectoryPathUI(), CurrentDirectoryContentUI(directories, files));
@@ -19,7 +20,7 @@ public static class UI
 		AnsiConsole.Write(pixPorterUI);
 	}
 
-	public static void RenderProgress(List<string> files, string targetFormat, Action<string, string> convertFileMethod)
+	public void RenderProgress(List<string> files, string targetFormat, Action<string, string> convertFileMethod)
 	{
 		AnsiConsole.Progress()
 			.Start(ctx =>
@@ -41,37 +42,31 @@ public static class UI
 			});
 	}
 
-	public static string Read(string prompt) => AnsiConsole.Ask<string>(prompt);
+	public string Read(string prompt) => AnsiConsole.Ask<string>(prompt);
 
-	public static void Write(string message, Color? color = null)
-	{
-		var styledMessage = new Markup(message, color ?? Color.White);
-		AnsiConsole.Write(styledMessage);
-	}
-
-	public static void Write(string message)
+	public void Write(string message)
 	{
 		AnsiConsole.Write(new Markup(message, Color.White));
 	}
 
-	public static void WriteAndWait(string message)
+	public void WriteAndWait(string message)
 	{
 		AnsiConsole.Write(new Markup(message, Color.White));
 		Console.ReadKey();
 	}
 
-	public static void DisplayErrorMessage(string message)
+	public void DisplayErrorMessage(string message)
 	{
 		AnsiConsole.Write(new Markup(message, Color.RosyBrown));
 		Console.ReadKey();
 	}
 
-	public static void DisplayTitle(string title)
+	public void DisplayTitle(string title)
 	{
 		Console.Title = title;
 	}
 
-	public static List<IRenderable> GetHelpDetails()
+	public List<IRenderable> GetHelpDetails()
 	{
 		return new List<IRenderable>
 		{
@@ -87,7 +82,7 @@ public static class UI
 
 	#region Private UI Component Methods
 
-	private static Table PixPorterUI(Table leftPanel, Panel rightPanel)
+	private Table PixPorterUI(Table leftPanel, Panel rightPanel)
 	{
 		var layoutTable = new Table
 		{
@@ -101,7 +96,7 @@ public static class UI
 		return layoutTable;
 	}
 
-	private static Panel DirectoryContentUI(Panel currentDirectoryPathUI, Table currentDirectoryContentUI)
+	private Panel DirectoryContentUI(Panel currentDirectoryPathUI, Table currentDirectoryContentUI)
 	{
 		return new Panel(new Rows([currentDirectoryPathUI, currentDirectoryContentUI]))
 		{
@@ -111,7 +106,7 @@ public static class UI
 		};
 	}
 
-	private static Table InformationContentUI()
+	private Table InformationContentUI()
 	{
 		var table = new Table
 		{
@@ -127,7 +122,7 @@ public static class UI
 		return table;
 	}
 
-	private static Panel CurrentDirectoryPathUI()
+	private Panel CurrentDirectoryPathUI()
 	{
 		var currentDirectory = new TextPath(Directory.GetCurrentDirectory().ToUpper())
 			.RootColor(Color.White)
@@ -142,7 +137,7 @@ public static class UI
 		};
 	}
 
-	private static Table CurrentDirectoryContentUI(IEnumerable<string> directories, IEnumerable<string> files)
+	private Table CurrentDirectoryContentUI(IEnumerable<string> directories, IEnumerable<string> files)
 	{
 		var table = new Table
 		{
@@ -158,7 +153,7 @@ public static class UI
 		return table;
 	}
 
-	private static Table HelpContentUI()
+	private Table HelpContentUI()
 	{
 		var table = new Table
 		{
@@ -181,7 +176,7 @@ public static class UI
 
 	#region Helper Methods
 
-	private static void AddInformationSections(Table table)
+	private void AddInformationSections(Table table)
 	{
 		var sections = new[]
 		{
@@ -196,7 +191,7 @@ public static class UI
 		}
 	}
 
-	private static IRenderable BuildTree(string header, IEnumerable<string> items)
+	private IRenderable BuildTree(string header, IEnumerable<string> items)
 	{
 		var tree = new Tree(new Markup(header, Color.White))
 		{
@@ -211,7 +206,7 @@ public static class UI
 		return tree;
 	}
 
-	private static IRenderable BuildSection(string title, (string Key, string Value)[] items)
+	private IRenderable BuildSection(string title, (string Key, string Value)[] items)
 	{
 		var sectionContent = new StringBuilder().AppendLine(title.ToUpper());
 
@@ -223,7 +218,7 @@ public static class UI
 		return new Markup(sectionContent.ToString());
 	}
 
-	private static (string Key, string Value)[] GetQuickGuideItems()
+	private (string Key, string Value)[] GetQuickGuideItems()
 	{
 		return new[]
 		{
@@ -232,7 +227,7 @@ public static class UI
 		};
 	}
 
-	private static (string Key, string Value)[] GetCommandItems()
+	private (string Key, string Value)[] GetCommandItems()
 	{
 		return new[]
 		{
@@ -243,7 +238,7 @@ public static class UI
 		};
 	}
 
-	private static (string Key, string Value)[] GetFormatItems()
+	private (string Key, string Value)[] GetFormatItems()
 	{
 		return new[]
 		{
@@ -256,54 +251,80 @@ public static class UI
 		};
 	}
 
-	private static IRenderable BuildHelpSection(string sectionType)
+	// In ConsoleUI
+	public List<T> GetHelpDetails<T>()
 	{
+		if (typeof(T) != typeof(IRenderable))
+		{
+			throw new InvalidOperationException($"Help details of type {typeof(T)} are not supported.");
+		}
+
+		var helpDetails = new List<IRenderable>
+		{
+			BuildHelpSection("Drag & Drop"),
+			BuildHelpSection("Direct File/Folder Conversion"),
+			BuildHelpSection("Current Directory Conversion"),
+			BuildHelpSection("How to Use"),
+			BuildHelpSection("Flags")
+		};
+
+		return helpDetails as List<T> ?? throw new CommandException("Error fetching help section");
+	}
+
+	private IRenderable BuildHelpSection(string sectionType)
+	{
+		Dictionary<string, string> defaultConversions = new()
+		{
+			{ Constants.PngFileFormat, Constants.WebpFileFormat },
+			{ Constants.JpgFileFormat, Constants.WebpFileFormat },
+			{ Constants.JpegFileFormat, Constants.WebpFileFormat },
+			{ Constants.WebpFileFormat, Constants.PngFileFormat },
+			{ Constants.GifFileFormat, Constants.PngFileFormat },
+			{ Constants.TiffFileFormat, Constants.PngFileFormat },
+			{ Constants.BmpFileFormat, Constants.PngFileFormat }
+		};
+
 		switch (sectionType)
 		{
 			case "Drag & Drop":
 				return BuildSection("Drag & Drop", new[]
 				{
-				("Drag a file or folder into the PixPorter window. Add an optional format flag if desired.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png[/]' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., '[steelblue]my_photo.webp[/]').", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., '[steelblue]my_photo.jpg[/]').", "")
-			});
-
+			("Drag a file or folder into the PixPorter window. Add an optional format flag if desired.", ""),
+			("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png[/]' + '[steelblue][[ENTER]][/]' -> Converts to the default format (e.g., '[steelblue]my_photo.webp[/]').", ""),
+			("[indianred]EXAMPLE:[/] '[steelblue]my_photo.png --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts to JPG (e.g., '[steelblue]my_photo.jpg[/]').", "")
+		});
 			case "Direct File/Folder Conversion":
 				return BuildSection("Direct File/Folder Conversion", new[]
 				{
-				("Enter a full file path or a folder path (and an optional format flag) + '[steelblue][[ENTER]][/]' for automatic conversion.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]C:\\Users\\Pictures --webp[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.", "")
-			});
-
+			("Enter a full file path or a folder path (and an optional format flag) + '[steelblue][[ENTER]][/]' for automatic conversion.", ""),
+			("[indianred]EXAMPLE:[/] '[steelblue]C:\\Users\\Pictures --webp[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the folder to WebP.", "")
+		});
 			case "Current Directory Conversion":
 				return BuildSection("Current Directory Conversion", new[]
 				{
-				("Use the command line to navigate to a directory and perform conversions.", ""),
-				("[steelblue]cd [[path]][/]   - Navigate to the desired directory.", ""),
-				("[steelblue]--ca[/]         - Converts all images in the current directory.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]cd C:\\Users\\Photos[/]' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.", ""),
-				("[indianred]EXAMPLE:[/] '[steelblue]--ca --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
-			});
-
+			("Use the command line to navigate to a directory and perform conversions.", ""),
+			("[steelblue]cd [[path]][/]   - Navigate to the desired directory.", ""),
+			("[steelblue]--ca[/]         - Converts all images in the current directory.", ""),
+			("[indianred]EXAMPLE:[/] '[steelblue]cd C:\\Users\\Photos[/]' + '[steelblue][[ENTER]][/]' -> Navigate to the directory.", ""),
+			("[indianred]EXAMPLE:[/] '[steelblue]--ca --jpg[/]' + '[steelblue][[ENTER]][/]' -> Converts all images in the current directory to JPG.", "")
+		});
 			case "How to Use":
 				return BuildSection("How to Use", new[]
 				{
-				("Add format flags [italic]if[/] you need a specific output format. These are optional since default mappings are pre-set.", ""),
-				($"Default mappings: {string.Join(" | ", Constants.DefaultConversions.Select(c => $"[indianred]{c.Key}[/] -> [indianred]{c.Value}[/]"))}", "")
-			});
-
+			("Add format flags [italic]if[/] you need a specific output format. These are optional since default mappings are pre-set.", ""),
+			($"Default mappings: {string.Join(" | ", defaultConversions.Select(c => $"[indianred]{c.Key}[/] -> [indianred]{c.Value}[/]"))}", "")
+		});
 			case "Flags":
 				return BuildSection("Flags", new[]
 				{
-				("[steelblue]--png[/]   ", "- Convert to PNG"),
-				("[steelblue]--jpg[/]   ", "- Convert to JPG"),
-				("[steelblue]--webp[/]  ", "- Convert to WebP"),
-				("[steelblue]--gif[/]   ", "- Convert to GIF"),
-				("[steelblue]--tiff[/]  ", "- Convert to TIFF"),
-				("[steelblue]--bmp[/]   ", "- Convert to BMP"),
-				("[steelblue]--ca[/]    ", "- Convert all image files in the current directory"),
-			});
-
+			("[steelblue]--png[/]   ", "- Convert to PNG"),
+			("[steelblue]--jpg[/]   ", "- Convert to JPG"),
+			("[steelblue]--webp[/]  ", "- Convert to WebP"),
+			("[steelblue]--gif[/]   ", "- Convert to GIF"),
+			("[steelblue]--tiff[/]  ", "- Convert to TIFF"),
+			("[steelblue]--bmp[/]   ", "- Convert to BMP"),
+			("[steelblue]--ca[/]    ", "- Convert all image files in the current directory"),
+		});
 			default:
 				return new Markup("Section not found");
 		}

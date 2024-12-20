@@ -1,9 +1,10 @@
 ﻿using Spectre.Console;
 
-public class CommandProcessor(CommandParser commandParser, CommandService commandService)
+public class CommandProcessor(CommandParser commandParser, CommandService commandService, IUserInterace ui)
 {
 	private readonly CommandParser _commandParser = commandParser;
 	private readonly CommandService _commandExecutor = commandService;
+	private readonly IUserInterace _ui = ui;
 
 	public void ProcessCommand(string input)
 	{
@@ -14,11 +15,11 @@ public class CommandProcessor(CommandParser commandParser, CommandService comman
 		}
 		catch (CommandException ex)
 		{
-			UI.DisplayErrorMessage($"Command Error: {ex.Message}");
+			_ui.DisplayErrorMessage($"Command Error: {ex.Message}");
 		}
 		catch (Exception ex)
 		{
-			UI.DisplayErrorMessage($"Unexpected Error: {ex.Message}");
+			_ui.DisplayErrorMessage($"Unexpected Error: {ex.Message}");
 		}
 	}
 }
