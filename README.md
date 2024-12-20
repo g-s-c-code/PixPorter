@@ -54,12 +54,6 @@ PixPorter provides source code that you can build and package into an executable
    - On **Windows**, it will be `PixPorter.exe` in the output folder.
    - On **macOS** or **Linux**, it will be a binary that you can run directly (`chmod +x PixPorter` may be required on Linux/macOS).
 
-### Requirements
-Before building and running PixPorter, make sure you have the following installed on your system:
-- **.NET 8 SDK or later**: Required to build and create the executable.
-- **SixLabors.ImageSharp**: A powerful image processing library (already included in the project).
-- A **compatible operating system**: Windows, macOS, or Linux.
-
 ## Usage
 When running PixPorter, the application launches an interactive prompt to navigate directories, view images, and perform conversions.
 
@@ -72,33 +66,65 @@ When running PixPorter, the application launches an interactive prompt to naviga
 - **`q`**: Quit.
 
 #### Examples
-Convert all images in the current directory to WebP:
+
+Convert a single image to default format (no flag needed):
 ```bash
---ca --webp
+vacation_photo.png
 ```
-Convert a single image to JPG:
+
+Convert a single image to WebP:
 ```bash
-my_image.png --jpg
+family_photo.jpg --webp
 ```
-Convert a single image to GIF:
+
+Convert all images in current directory to default format:
 ```bash
-my_image.png --gif
+--ca
 ```
-Convert a single image to TIFF:
+
+Convert all images in current directory to PNG:
 ```bash
-my_image.png --tiff
+--ca --png
 ```
-Change the working directory:
+
+Convert all images in a specific directory to JPEG:
 ```bash
-cd C:\Users\Pictures or cd C:/Users/Pictures
+C:\Users\Pictures --jpeg
 ```
+
+Navigate to a directory:
+```bash
+cd C:\Users\Pictures
+```
+or
+```bash
+cd C:/Users/Pictures
+```
+
+Convert a file by dragging and dropping:
+```
+Simply drag any image file into the PixPorter window
+```
+
+Convert a directory by dragging and dropping:
+```
+Drag a folder into the PixPorter window to convert all images inside
+```
+
 Display the help menu:
 ```bash
 help
 ```
 
+Exit the application:
+```bash
+q
+```
+
 ### Drag and Drop
-Drag and drop an image into the PixPorter window to automatically convert it to the default target format.
+Just drag and drop any image or folder into the PixPorter window:
+- Single image: Converts to default format
+- Directory: Converts all supported images inside
 
 ## Contributing
 Contributions are welcome! To contribute:
