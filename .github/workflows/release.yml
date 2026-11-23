@@ -1,0 +1,77 @@
+# PixPorter release: self-contained win-x64 build -> itch (channel windows) + private draft release.
+# Runs on the owner's laptop runner. Rules: no `uses:` actions, Git Bash steps, no artifact uploads.
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version, e.g. 1.0.0"
+        required: true
+      itch:
+        description: "Push to itch (true/false)"
+        required: true
+        default: "true"
+
+jobs:
+  build:
+    runs-on: [self-hosted, Windows]
+    defaults:
+      run:
+        shell: bash
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: Checkout (plain git)
+        run: |
+          taskkill //F //IM PixPorter.exe 2>/dev/null || true
+          if [ -d src/.git ]; then
+            git -C src fetch --depth 1 origin "$GITHUB_SHA" && git -C src reset --hard FETCH_HEAD && git -C src clean -fdx
+          else
+            rm -rf src
+            git clone --depth 1 "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" src
+            git -C src fetch --depth 1 origin "$GITHUB_SHA" && git -C src reset --hard FETCH_HEAD
+          fi
+
+      - name: Publish self-contained exe
+        working-directory: src
+        run: |
+          dotnet --version
+          dotnet publish PixPorter.WPF/PixPorter.WPF.csproj -c Release -r win-x64 --self-contained true \
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
+            -p:EnableCompressionInSingleFile=true -p:DebugType=none \
+            -p:Version="$VERSION" -p:AssemblyName=PixPorter \
+            -o ../out/PixPorter
+          cp LICENSE ../out/PixPorter/LICENSE.txt 2>/dev/null || true
+          cp "Licenses/Six Labors Split License.txt" ../out/PixPorter/ 2>/dev/null || true
+          printf 'PixPorter %s\r\nRun PixPorter.exe. No install needed.\r\n' "$VERSION" > ../out/PixPorter/README.txt
+          ls -la ../out/PixPorter
+
+      - name: Zip
+        run: |
+          rm -f pixporter-windows.zip
+          powershell -NoProfile -Command "Compress-Archive -Path out/PixPorter -DestinationPath pixporter-windows.zip -Force"
+          ls -la pixporter-windows.zip
+
+      - name: Push to itch
+        if: ${{ inputs.itch == 'true' }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: ${{ vars.ITCH_TARGET }}
+        run: |
+          BUTLER="$HOME/butler/butler"; [ -x "$BUTLER.exe" ] && BUTLER="$BUTLER.exe"
+          for i in 1 2 3; do
+            "$BUTLER" push pixporter-windows.zip "$ITCH_TARGET:windows" --userversion "$VERSION" && break
+            echo "push failed (maybe 429), retry in 60 s"; sleep 60
+          done
+          "$BUTLER" status "$ITCH_TARGET"
+
+      - name: Backup to private draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X POST "repos/${{ github.repository }}/releases" -f tag_name="v$VERSION" \
+            -f name="PixPorter $VERSION" -F draft=true -f target_commitish="$GITHUB_SHA" > rel.json
+          UPLOAD=$(sed -n 's/.*"upload_url": *"\([^{"]*\).*/\1/p' rel.json | head -1)
+          curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/zip" \
+            --data-binary @pixporter-windows.zip "$UPLOAD?name=pixporter-windows.zip" > /dev/null
+          echo "draft release v$VERSION created"
