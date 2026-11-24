@@ -23,8 +23,8 @@ repositories). You may replace Magick.Native-Q8-*.dll with your own build of
 that library, including modified versions of the LGPL components; PixPorter
 loads it as a separate dynamic library. For at least three years from the date
 you obtained PixPorter, the publisher will also provide a copy of that source
-code on request, for no more than the cost of distribution; use the support
-contact on PixPorter's store listing.
+code on request, for no more than the cost of distribution. Write to
+gsc.code@gmail.com.
 
 Ghostscript is NOT included. ImageMagick can use it only if you install it
 yourself; PixPorter does not use it.

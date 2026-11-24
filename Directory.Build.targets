@@ -1,0 +1,15 @@
+<Project>
+
+  <!--
+    PixPorter only runs on Windows. Packages such as Magick.NET-Q8-AnyCPU ship native
+    binaries for Linux and macOS as well; drop those so they are neither copied to the
+    build output nor packed into the MSIX. Windows x64, x86 and arm64 binaries are kept.
+  -->
+  <Target Name="RemoveNonWindowsNativeAssets" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)"
+                                    Condition="!$([System.String]::Copy('%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)').StartsWith('win'))" />
+    </ItemGroup>
+  </Target>
+
+</Project>

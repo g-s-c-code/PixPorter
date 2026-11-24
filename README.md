@@ -86,3 +86,5 @@ Image work is done by [Magick.NET](https://github.com/dlemstra/Magick.NET), the 
 PixPorter is proprietary software. All rights reserved. See `LICENSE` for the end-user license agreement.
 
 Open-source components and their licenses are listed in `THIRD-PARTY-NOTICES.txt`, which ships with the app and opens from the About screen.
+
+Privacy: PixPorter collects no data. See `PRIVACY.md`.
