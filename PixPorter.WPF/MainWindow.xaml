@@ -1085,7 +1085,7 @@
                                         <TextBlock Text="LICENSE"
                                                    Style="{StaticResource HelpSectionHeader}" />
                                         <TextBlock Style="{StaticResource HelpBodyText}" FontSize="12"
-                                                   Text="PixPorter is a commercial application. All rights reserved. Redistribution or modification of this software without permission is not permitted." />
+                                                   Text="PixPorter is a commercial application. All rights reserved. Use is governed by the PixPorter license agreement. Open-source components are licensed under their own terms, listed in the third-party notices." />
 
                                         <!-- Open source -->
                                         <TextBlock Text="OPEN SOURCE LIBRARIES"
@@ -1100,16 +1100,74 @@
                                                        Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" Margin="0,1,0,0" />
                                             <StackPanel Grid.Column="1">
                                                 <TextBlock Style="{StaticResource HelpBodyText}" FontSize="12">
-                                                    <Run FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="SixLabors.ImageSharp" />
+                                                    <Run FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Magick.NET" />
                                                     <Run Text="— Image processing and format conversion engine." />
                                                 </TextBlock>
-                                                <TextBlock Text="Licensed under the Apache License 2.0. © Six Labors. sixlabors.com/products/imagesharp"
+                                                <TextBlock Text="Licensed under the Apache License 2.0. © Dirk Lemstra. Includes ImageMagick, © ImageMagick Studio LLC, licensed under the ImageMagick License. github.com/dlemstra/Magick.NET"
                                                            Style="{StaticResource HelpBodyText}"
                                                            FontSize="11"
                                                            Foreground="{DynamicResource TextTertiaryBrush}"
                                                            Margin="0,2,0,0" />
                                             </StackPanel>
                                         </Grid>
+                                        <Grid Margin="0,6,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="→" FontSize="13"
+                                                       Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" Margin="0,1,0,0" />
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Style="{StaticResource HelpBodyText}" FontSize="12">
+                                                    <Run FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="CommunityToolkit.Mvvm" />
+                                                    <Run Text="— MVVM framework." />
+                                                </TextBlock>
+                                                <TextBlock Text="Licensed under the MIT License. © .NET Foundation and Contributors."
+                                                           Style="{StaticResource HelpBodyText}"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource TextTertiaryBrush}"
+                                                           Margin="0,2,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Margin="0,6,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="→" FontSize="13"
+                                                       Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Top" Margin="0,1,0,0" />
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Style="{StaticResource HelpBodyText}" FontSize="12">
+                                                    <Run FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Text="Microsoft.Xaml.Behaviors.Wpf" />
+                                                    <Run Text="— XAML behaviors." />
+                                                </TextBlock>
+                                                <TextBlock Text="Licensed under the MIT License. © Microsoft Corporation."
+                                                           Style="{StaticResource HelpBodyText}"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource TextTertiaryBrush}"
+                                                           Margin="0,2,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <TextBlock Style="{StaticResource HelpBodyText}"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource TextTertiaryBrush}"
+                                                   Margin="0,10,0,0"
+                                                   Text="ImageMagick includes many further open-source libraries, among them libjpeg-turbo, libpng, libwebp, LibTIFF, zlib and FreeType. This software is based in part on the work of the Independent JPEG Group. Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved." />
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,12,0,12">
+                                            <Button Content="Third-party notices"
+                                                    Style="{StaticResource GhostButton}"
+                                                    Padding="12,6"
+                                                    FontSize="13"
+                                                    Margin="0,0,8,0"
+                                                    Command="{Binding OpenThirdPartyNoticesCommand}" />
+                                            <Button Content="License agreement"
+                                                    Style="{StaticResource GhostButton}"
+                                                    Padding="12,6"
+                                                    FontSize="13"
+                                                    Command="{Binding OpenLicenseCommand}" />
+                                        </StackPanel>
 
                                         <Border Height="1" Background="{DynamicResource BorderSubtleBrush}" Margin="0,0,0,12" />
 

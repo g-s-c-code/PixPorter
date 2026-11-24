@@ -6,6 +6,7 @@ using PixPorter.Common.Helpers;
 using PixPorter.WPF.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
@@ -388,6 +389,32 @@ public partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void ClearLog() => LogEntries.Clear();
+
+    [RelayCommand]
+    private void OpenThirdPartyNotices() => OpenBundledDocument("THIRD-PARTY-NOTICES.txt");
+
+    [RelayCommand]
+    private void OpenLicense() => OpenBundledDocument("LICENSE.txt");
+
+    private void OpenBundledDocument(string fileName)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, fileName);
+
+        if (!File.Exists(path))
+        {
+            ShowStatus($"{fileName} was not found next to the application.", isError: true);
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception exception) when (exception is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            ShowStatus($"Could not open {fileName}: {exception.Message}", isError: true);
+        }
+    }
 
     [RelayCommand]
     private void RemoveFile(ConversionItemViewModel item)

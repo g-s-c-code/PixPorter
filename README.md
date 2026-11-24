@@ -75,12 +75,14 @@ Building the solution instead of the project will fail, because `PixPorter.wappr
 
 The command line version lives in its own repository, [PixPorterCLI](https://github.com/g-s-c-code/PixPorterCLI).
 
-## Open source
+## Third-party software
 
-Image work is done by [SixLabors.ImageSharp](https://sixlabors.com/products/imagesharp/), a fully managed, cross-platform image processing library.
+Image work is done by [Magick.NET](https://github.com/dlemstra/Magick.NET), the .NET wrapper for [ImageMagick](https://imagemagick.org).
 
-> Licensed under the Apache License 2.0. (c) Six Labors.
+> Magick.NET is licensed under the Apache License 2.0, (c) Dirk Lemstra. ImageMagick is licensed under the [ImageMagick License](https://imagemagick.org/script/license.php), (c) ImageMagick Studio LLC. ImageMagick bundles further open-source libraries; all of them, with their full license texts, are listed in `THIRD-PARTY-NOTICES.txt`.
 
 ## Licence
 
-MIT. See `LICENSE`.
+PixPorter is proprietary software. All rights reserved. See `LICENSE` for the end-user license agreement.
+
+Open-source components and their licenses are listed in `THIRD-PARTY-NOTICES.txt`, which ships with the app and opens from the About screen.
