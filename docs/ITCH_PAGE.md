@@ -27,7 +27,7 @@ Source of truth for the itch page. Paste the fields into https://itch.io/game/ed
 
 ```
 1. Download pixporter-windows.zip and unzip it anywhere (e.g. Documents\PixPorter).
-2. Run PixPorter.exe. No installer and no .NET install needed; everything is inside the folder.
+2. Run PixPorter.exe. No installer and no .NET install needed; keep all files in the folder together.
 3. Windows SmartScreen may say "Windows protected your PC" the first time, because the app is
    new and unsigned. Click "More info" -> "Run anyway".
 4. Optional: right-click PixPorter.exe -> Send to -> Desktop (create shortcut), or use it via
@@ -109,9 +109,16 @@ quality works, so you never need a manual.</p>
   <li>Works fully offline</li>
 </ul>
 
-<h2>Credits</h2>
-<p>Image processing by <a href="https://sixlabors.com/products/imagesharp/">SixLabors.ImageSharp</a>,
-licensed under the Apache License 2.0, © Six Labors. Its licence text is included in the download.</p>
+<h2>Privacy</h2>
+<p>PixPorter collects nothing. No accounts, no analytics, no network connections: your images never leave your PC.</p>
+
+<h2>Licence and credits</h2>
+<p>Buying PixPorter gives you a personal licence under the end-user licence agreement included in
+the download (<code>LICENSE.txt</code>). Image processing by
+<a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> (Apache 2.0, © Dirk Lemstra) and
+<a href="https://imagemagick.org">ImageMagick</a> (ImageMagick License, © ImageMagick Studio LLC).
+All open-source components and their licences are listed in <code>THIRD-PARTY-NOTICES.txt</code>,
+shipped with the app.</p>
 
 <p>Questions or a format you would like added? Get in touch through my itch.io profile.</p>
 ```

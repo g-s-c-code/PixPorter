@@ -37,12 +37,14 @@ jobs:
         run: |
           dotnet --version
           dotnet publish PixPorter.WPF/PixPorter.WPF.csproj -c Release -r win-x64 --self-contained true \
-            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
-            -p:EnableCompressionInSingleFile=true -p:DebugType=none \
+            -p:DebugType=none \
             -p:Version="$VERSION" -p:AssemblyName=PixPorter \
             -o ../out/PixPorter
-          cp LICENSE ../out/PixPorter/LICENSE.txt 2>/dev/null || true
-          cp "Licenses/Six Labors Split License.txt" ../out/PixPorter/ 2>/dev/null || true
+          # LGPL: Magick.Native must stay a separate, replaceable DLL, so no single-file bundling.
+          ls ../out/PixPorter | grep -i "Magick.Native" || { echo "Magick.Native DLL missing"; exit 1; }
+          cp LICENSE ../out/PixPorter/LICENSE.txt
+          cp THIRD-PARTY-NOTICES.txt ../out/PixPorter/
+          cp PRIVACY.md ../out/PixPorter/PRIVACY.txt
           printf 'PixPorter %s\r\nRun PixPorter.exe. No install needed.\r\n' "$VERSION" > ../out/PixPorter/README.txt
           ls -la ../out/PixPorter
 
