@@ -9,8 +9,9 @@ nothing in the PixPorter license agreement limits the rights they give you.
 
 Most components below are compiled into Magick.Native-Q8-*.dll, the native
 ImageMagick library that ships as a separate, unmodified file inside the
-PixPorter installation (folder runtimes\<platform>\native). PixPorter itself
-contains no code from these libraries.
+PixPorter installation: next to PixPorter.exe in the downloaded (itch.io)
+version, or in runtimes\<platform>\native in builds that keep that layout.
+PixPorter itself contains no code from these libraries.
 
 SOURCE CODE FOR LGPL-LICENSED COMPONENTS
 Several components (libheif, libde265, LibRaw, GNU FriBidi, cairo, Pango,
